@@ -9,6 +9,9 @@ export const errorHandler = (err, req, res, next) => {
       .join(", ");
     return res.status(400).json({ error: { message } });
   }
+  if (err.name === "CastError") {
+    return res.status(400).json({ error: { message: "Invalid value" } });
+  }
   if (err.code === 11000) {
     return res.status(409).json({ error: { message: "Duplicated value" } });
   }

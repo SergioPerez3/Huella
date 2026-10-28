@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
-    "test": "mocha test/**/*.test.js --exit"
+    "test": "mocha --file test/setup.js \"test/**/*.test.js\" --timeout 20000 --exit"
   },
   "keywords": [],
   "author": "",

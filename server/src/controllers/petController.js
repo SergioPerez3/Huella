@@ -1,4 +1,6 @@
 import Pet from "../models/Pet.js";
+import HealthRecord from "../models/HealthRecord.js";
+import Weight from "../models/Weight.js";
 
 const allowed = [
   "name",
@@ -50,6 +52,10 @@ export const updatePet = async (req, res, next) => {
 
 export const deletePet = async (req, res, next) => {
   try {
+    await Promise.all([
+      HealthRecord.deleteMany({ petId: req.pet._id }),
+      Weight.deleteMany({ petId: req.pet._id }),
+    ]);
     await req.pet.deleteOne();
     res.status(200).json({ data: { message: "Pet deleted" } });
   } catch (error) {
