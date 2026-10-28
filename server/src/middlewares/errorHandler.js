@@ -3,6 +3,16 @@ export const notFound = (req, res) => {
 };
 
 export const errorHandler = (err, req, res, next) => {
+  if (err.name === "MulterError") {
+    const message =
+      err.code === "LIMIT_FILE_SIZE"
+        ? "File too large (max 5 MB)"
+        : err.message;
+    return res.status(400).json({ error: { message } });
+  }
+  if (err.code === "INVALID_FILE") {
+    return res.status(400).json({ error: { message: err.message } });
+  }
   if (err.name === "ValidationError") {
     const message = Object.values(err.errors)
       .map((e) => e.message)

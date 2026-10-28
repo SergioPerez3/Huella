@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import HealthRecord from "../models/HealthRecord.js";
 import pick from "../utils/pick.js";
+import Document from "../models/Document.js";
 
 const fields = ["type", "date", "title", "notes", "nextDueDate", "treatment"];
 
@@ -67,6 +68,10 @@ export const deleteRecord = async (req, res, next) => {
     const record = await findRecord(req);
     if (!record)
       return res.status(404).json({ error: { message: "Record not found" } });
+    await Document.updateMany(
+      { recordId: record._id },
+      { $unset: { recordId: 1 } },
+    );
     await record.deleteOne();
     res.status(200).json({ data: { message: "Record deleted" } });
   } catch (error) {
