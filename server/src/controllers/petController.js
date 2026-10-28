@@ -3,6 +3,8 @@ import HealthRecord from "../models/HealthRecord.js";
 import Weight from "../models/Weight.js";
 import Document from "../models/Document.js";
 import { uploadBuffer, deleteFile } from "../services/uploadService.js";
+import Task from "../models/Task.js";
+import Expense from "../models/Expense.js";
 
 const allowed = [
   "name",
@@ -64,6 +66,8 @@ export const deletePet = async (req, res, next) => {
       HealthRecord.deleteMany({ petId: req.pet._id }),
       Weight.deleteMany({ petId: req.pet._id }),
       Document.deleteMany({ petId: req.pet._id }),
+      Task.deleteMany({ petId: req.pet._id }),
+      Expense.deleteMany({ petId: req.pet._id }),
     ]);
     await req.pet.deleteOne();
     res.status(200).json({ data: { message: "Pet deleted" } });
