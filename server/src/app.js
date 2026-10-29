@@ -1,14 +1,20 @@
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes.js";
 import petRoutes from "./routes/petRoutes.js";
-import { notFound, errorHandler } from "./middlewares/errorHandler.js";
 import taskRoutes from "./routes/taskRoutes.js";
 import expenseRoutes from "./routes/expenseRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
+import publicRoutes from "./routes/publicRoutes.js";
+import { publicLimiter } from "./middlewares/rateLimiters.js";
+import { notFound, errorHandler } from "./middlewares/errorHandler.js";
 
 const app = express();
 
+app.set("trust proxy", 1);
+app.use(helmet());
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
@@ -21,6 +27,9 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/pets", petRoutes);
 app.use("/api/v1/tasks", taskRoutes);
 app.use("/api/v1/expenses", expenseRoutes);
+app.use("/api/v1/dashboard", dashboardRoutes);
+app.use("/api/v1/public", publicLimiter, publicRoutes);
+
 app.use(notFound);
 app.use(errorHandler);
 

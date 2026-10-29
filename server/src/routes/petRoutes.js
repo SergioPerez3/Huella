@@ -13,6 +13,7 @@ import weightRoutes from "./weightRoutes.js";
 import documentRoutes from "./documentRoutes.js";
 import { uploadImage } from "../middlewares/upload.js";
 import { uploadPhoto, deletePhoto } from "../controllers/petController.js";
+import emergencyRoutes from './emergencyRoutes.js';
 
 const router = Router();
 
@@ -20,6 +21,7 @@ router.use(auth);
 router.use("/:petId/health", petOwnership, healthRoutes);
 router.use("/:petId/weights", petOwnership, weightRoutes);
 router.use("/:petId/documents", petOwnership, documentRoutes);
+router.use('/:petId/emergency', petOwnership, emergencyRoutes);
 
 router.route("/").get(getPets).post(createPet);
 

@@ -18,6 +18,15 @@ const petSchema = new mongoose.Schema(
     feeding: { food: String, amount: String, schedule: String },
     allergies: [String],
     notes: String,
+    emergency: {
+      enabled: { type: Boolean, default: false },
+      publicToken: { type: String, unique: true, sparse: true },
+      ownerPhone: { type: String, trim: true },
+      vetContact: { type: String, trim: true },
+      instructions: { type: String, trim: true },
+      showAllergies: { type: Boolean, default: false },
+      showMedication: { type: Boolean, default: false },
+    },
   },
   { timestamps: true },
 );
