@@ -18,9 +18,10 @@ export const getDashboard = async (req, res, next) => {
       upcomingHealth,
       latestWeights,
       monthExpenses,
+      treatedIds,
     ] = await Promise.all([
       Pet.find({ owner })
-        .select("name species photo.url")
+        .select("name species breed birthDate photo.url")
         .sort({ createdAt: -1 }),
       Task.countDocuments({ owner, status: "pending", dueAt: { $lt: now } }),
       Task.find({ owner, status: "pending", dueAt: { $gte: now } })
@@ -48,11 +49,25 @@ export const getDashboard = async (req, res, next) => {
         },
       ]),
       summarizeMonth(owner, month),
+      HealthRecord.distinct("petId", {
+        owner,
+        type: "treatment",
+        $or: [
+          { "treatment.endDate": { $gte: now } },
+          { "treatment.endDate": null },
+        ],
+      }),
     ]);
+
+    const treated = new Set(treatedIds.map(String));
+    const petsData = pets.map((pet) => ({
+      ...pet.toObject(),
+      inTreatment: treated.has(String(pet._id)),
+    }));
 
     res.status(200).json({
       data: {
-        pets,
+        pets: petsData,
         tasks: { overdue, upcoming },
         upcomingHealth,
         latestWeights,

@@ -83,22 +83,18 @@ describe("Emergency card", () => {
   it("shows only the active treatments when medication is allowed", async () => {
     const healthUrl = `/api/v1/pets/${pet._id}/health`;
     const base = { type: "treatment", date: "2026-10-01", title: "Treatment" };
-    await agent
-      .post(healthUrl)
-      .send({
-        ...base,
-        treatment: {
-          drug: "Amoxicillin",
-          dose: "250mg",
-          endDate: "2099-01-01",
-        },
-      });
-    await agent
-      .post(healthUrl)
-      .send({
-        ...base,
-        treatment: { drug: "OldDrug", dose: "1mg", endDate: "2020-01-01" },
-      });
+    await agent.post(healthUrl).send({
+      ...base,
+      treatment: {
+        drug: "Amoxicillin",
+        dose: "250mg",
+        endDate: "2099-01-01",
+      },
+    });
+    await agent.post(healthUrl).send({
+      ...base,
+      treatment: { drug: "OldDrug", dose: "1mg", endDate: "2020-01-01" },
+    });
 
     const token = (await enable({ showMedication: true })).body.data.emergency
       .publicToken;
@@ -129,5 +125,21 @@ describe("Emergency card", () => {
   it("cannot regenerate a card that is not enabled", async () => {
     const res = await agent.post(`${base}/regenerate`);
     expect(res.status).to.equal(400);
+  });
+
+  it("always shows the owner name and shows conditions only when allowed", async () => {
+    const token = (
+      await enable({
+        ownerName: "Laura Gomez",
+        conditions: "Sensitive to antibiotics",
+      })
+    ).body.data.emergency.publicToken;
+    const first = await publicCard(token);
+    expect(first.body.data.ownerName).to.equal("Laura Gomez");
+    expect(first.body.data).to.not.have.property("conditions");
+
+    await agent.patch(base).send({ showConditions: true });
+    const second = await publicCard(token);
+    expect(second.body.data.conditions).to.equal("Sensitive to antibiotics");
   });
 });

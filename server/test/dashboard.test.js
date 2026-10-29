@@ -67,14 +67,12 @@ describe("Dashboard", () => {
 
     const stranger = await registerUser();
     const otherPet = await createPet(stranger.agent);
-    await stranger.agent
-      .post("/api/v1/expenses")
-      .send({
-        petId: otherPet._id,
-        amount: 9999,
-        category: "vet",
-        date: new Date().toISOString(),
-      });
+    await stranger.agent.post("/api/v1/expenses").send({
+      petId: otherPet._id,
+      amount: 9999,
+      category: "vet",
+      date: new Date().toISOString(),
+    });
 
     const { data } = (await agent.get(api)).body;
     expect(data.pets).to.have.length(1);
@@ -86,5 +84,29 @@ describe("Dashboard", () => {
       24, 23,
     ]);
     expect(data.monthExpenses.total).to.equal(1000);
+  });
+
+  it("shows pet details and whether each pet has an active treatment", async () => {
+    const { agent } = await registerUser();
+    const active = await createPet(agent, { name: "Luna", breed: "Labrador" });
+    const idle = await createPet(agent, { name: "Milo", species: "cat" });
+    const treatment = (endDate) => ({
+      type: "treatment",
+      date: "2026-10-01",
+      title: "Treatment",
+      treatment: { drug: "X", endDate },
+    });
+    await agent
+      .post(`/api/v1/pets/${active._id}/health`)
+      .send(treatment("2099-01-01"));
+    await agent
+      .post(`/api/v1/pets/${idle._id}/health`)
+      .send(treatment("2020-02-01"));
+
+    const { data } = (await agent.get(api)).body;
+    const byName = Object.fromEntries(data.pets.map((p) => [p.name, p]));
+    expect(byName.Luna.inTreatment).to.equal(true);
+    expect(byName.Luna.breed).to.equal("Labrador");
+    expect(byName.Milo.inTreatment).to.equal(false);
   });
 });

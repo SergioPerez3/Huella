@@ -5,11 +5,14 @@ import pick from "../utils/pick.js";
 
 const fields = [
   "enabled",
+  "ownerName",
   "ownerPhone",
   "vetContact",
   "instructions",
+  "conditions",
   "showAllergies",
   "showMedication",
+  "showConditions",
 ];
 
 const newToken = () => crypto.randomBytes(24).toString("base64url");
@@ -72,9 +75,11 @@ export const getPublicCard = async (req, res, next) => {
       ownerPhone: emergency.ownerPhone,
       vetContact: emergency.vetContact,
       instructions: emergency.instructions,
+      ownerName: emergency.ownerName,
     };
 
     if (emergency.showAllergies) data.allergies = pet.allergies;
+    if (emergency.showConditions) data.conditions = emergency.conditions;
 
     if (emergency.showMedication) {
       const treatments = await HealthRecord.find({
