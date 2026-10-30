@@ -10,10 +10,13 @@ export const handleResponse = async (response) => {
   return body;
 };
 
-export const request = (path, { method = "GET", body } = {}) =>
-  fetch(`${API_URL}${path}`, {
+export const request = (path, { method = "GET", body } = {}) => {
+  const isForm = body instanceof FormData;
+  return fetch(`${API_URL}${path}`, {
     method,
     credentials: "include",
-    headers: body ? { "Content-Type": "application/json" } : undefined,
-    body: body ? JSON.stringify(body) : undefined,
+    headers:
+      body && !isForm ? { "Content-Type": "application/json" } : undefined,
+    body: body ? (isForm ? body : JSON.stringify(body)) : undefined,
   }).then(handleResponse);
+};

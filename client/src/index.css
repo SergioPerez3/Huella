@@ -410,3 +410,267 @@ label {
     color: var(--green-800);
   }
 }
+textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+.btn-danger:hover {
+  background: #b83a3a;
+}
+.btn-sm {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.85rem;
+}
+
+a.pet-card {
+  display: block;
+  transition: transform 0.15s;
+}
+a.pet-card:hover {
+  transform: translateY(-3px);
+}
+
+.dialog {
+  border: 0;
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  max-width: 420px;
+  width: calc(100% - 2rem);
+  box-shadow: var(--shadow);
+}
+.dialog::backdrop {
+  background: rgba(11, 61, 46, 0.45);
+}
+.dialog h2 {
+  margin-bottom: 0.5rem;
+}
+.dialog .form-actions {
+  margin-top: 1.25rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: var(--green-600);
+  font-weight: 700;
+}
+
+.pet-header {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.pet-photo {
+  flex-shrink: 0;
+  width: 160px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius);
+  background: var(--green-100);
+  color: var(--green-600);
+  font-size: 3rem;
+}
+.pet-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.pet-header-info {
+  display: grid;
+  gap: 0.75rem;
+}
+.pet-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  overflow-x: auto;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+.tabs button {
+  padding: 0.75rem 1rem;
+  background: none;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  font-weight: 700;
+  color: var(--muted);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.tabs button[aria-selected="true"] {
+  color: var(--green-800);
+  border-bottom-color: var(--green-600);
+}
+
+.info-list {
+  display: grid;
+  margin: 1rem 0 0;
+}
+.info-list > div {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.info-list > div:last-child {
+  border-bottom: 0;
+}
+.info-list dt {
+  color: var(--muted);
+  font-weight: 600;
+}
+.info-list dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+@media (max-width: 767px) {
+  .pet-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .pet-photo {
+    width: 100%;
+    max-width: 280px;
+  }
+  .info-list > div {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+}
+.stack {
+  display: grid;
+  gap: 1rem;
+}
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.toolbar select {
+  width: auto;
+  min-width: 200px;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.chip {
+  display: inline-block;
+  padding: 0.15rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: var(--green-100);
+  color: var(--green-800);
+}
+.chip-deworming {
+  background: #efe6fa;
+  color: #5b3a8f;
+}
+.chip-visit {
+  background: #fdeedd;
+  color: #a65a10;
+}
+.chip-treatment,
+.chip-warn {
+  background: #fbe4e4;
+  color: #a02d2d;
+}
+
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+.record {
+  display: grid;
+  gap: 0.6rem;
+}
+.record-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.record-head h3 {
+  flex: 1;
+  min-width: 140px;
+  font-size: 1rem;
+}
+.record-head time {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.record-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.doc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.doc-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--cream);
+  border-radius: 12px;
+}
+.doc-item a {
+  flex: 1;
+  font-weight: 700;
+  color: var(--green-800);
+  overflow-wrap: anywhere;
+}
+.card.doc-list {
+  padding: 1rem;
+}
+.icon-btn {
+  display: grid;
+  place-items: center;
+  padding: 0.35rem;
+  background: none;
+  border: 0;
+  border-radius: 8px;
+  color: var(--muted);
+  cursor: pointer;
+}
+.icon-btn:hover {
+  background: #fff;
+  color: var(--danger);
+}
+
+@media (max-width: 767px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  .toolbar select {
+    width: 100%;
+  }
+}

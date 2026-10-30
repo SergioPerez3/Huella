@@ -3,6 +3,7 @@ import {
   FiHeart,
   FiCalendar,
   FiCheckSquare,
+  FiActivity,
   FiDollarSign,
   FiSettings,
 } from "react-icons/fi";
@@ -17,6 +18,14 @@ export const mainNav = [
     Icon: FiCalendar,
   },
   { to: "/tasks", label: "Tareas", short: "Tareas", Icon: FiCheckSquare },
+  {
+    to: "/health",
+    label: "Salud",
+    short: "Salud",
+    Icon: FiActivity,
+    mobile: true,
+  },
+
   { to: "/expenses", label: "Gastos", short: "Gastos", Icon: FiDollarSign },
 ];
 

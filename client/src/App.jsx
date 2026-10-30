@@ -14,6 +14,8 @@ import Pets from "./pages/Pets.jsx";
 import PetNew from "./pages/PetNew.jsx";
 import ComingSoon from "./pages/ComingSoon.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import PetDetail from "./pages/PetDetail.jsx";
+import PetEdit from "./pages/PetEdit.jsx";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +34,9 @@ const router = createBrowserRouter([
       { path: "dashboard", element: <Dashboard /> },
       { path: "pets", element: <Pets /> },
       { path: "pets/new", element: <PetNew /> },
+      { path: "pets/:petId", element: <PetDetail /> },
+      { path: "pets/:petId/edit", element: <PetEdit /> },
+      { path: "health", element: <ComingSoon title="Salud" /> },
       { path: "calendar", element: <ComingSoon title="Calendario" /> },
       { path: "tasks", element: <ComingSoon title="Tareas" /> },
       { path: "expenses", element: <ComingSoon title="Gastos" /> },

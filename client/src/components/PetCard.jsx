@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { FaPaw } from "react-icons/fa";
 import { getAge } from "../utils/age.js";
 
@@ -12,7 +13,7 @@ const PetCard = ({ pet }) => {
     .join(" · ");
 
   return (
-    <article className="card pet-card">
+    <Link to={`/pets/${pet._id}`} className="card pet-card">
       <div className="pet-card-photo">
         {pet.photo?.url ? (
           <img src={pet.photo.url} alt={pet.name} />
@@ -24,7 +25,7 @@ const PetCard = ({ pet }) => {
         <h2>{pet.name}</h2>
         <p className="muted">{details}</p>
       </div>
-    </article>
+    </Link>
   );
 };
 
