@@ -16,6 +16,8 @@ import ComingSoon from "./pages/ComingSoon.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import PetDetail from "./pages/PetDetail.jsx";
 import PetEdit from "./pages/PetEdit.jsx";
+import Tasks from './pages/Tasks.jsx';
+import Calendar from './pages/Calendar.jsx';
 
 const router = createBrowserRouter([
   {
@@ -37,8 +39,8 @@ const router = createBrowserRouter([
       { path: "pets/:petId", element: <PetDetail /> },
       { path: "pets/:petId/edit", element: <PetEdit /> },
       { path: "health", element: <ComingSoon title="Salud" /> },
-      { path: "calendar", element: <ComingSoon title="Calendario" /> },
-      { path: "tasks", element: <ComingSoon title="Tareas" /> },
+      { path: "calendar", element: <Calendar /> },
+      { path: "tasks", element: <Tasks /> },
       { path: "expenses", element: <ComingSoon title="Gastos" /> },
       { path: "settings", element: <ComingSoon title="Configuración" /> },
     ],

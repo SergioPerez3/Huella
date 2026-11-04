@@ -15,7 +15,7 @@ import { healthTypes } from "../../utils/health.js";
 import { formatDate } from "../../utils/format.js";
 import { validateFile } from "../../utils/file.js";
 import HealthForm from "./HealthForm.jsx";
-import DocumentItem from "../DocumentItem.jsx";
+import DocumentCard from "../DocumentCard.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
 
 const PetHealth = ({ petId }) => {
@@ -184,9 +184,9 @@ const PetHealth = ({ petId }) => {
             )}
 
             {docsOf(record._id).length > 0 && (
-              <ul className="doc-list">
+              <ul className="doc-grid">
                 {docsOf(record._id).map((doc) => (
-                  <DocumentItem
+                  <DocumentCard
                     key={doc._id}
                     doc={doc}
                     onDelete={(d) => setConfirm({ kind: "document", item: d })}

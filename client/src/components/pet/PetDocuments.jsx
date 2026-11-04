@@ -6,7 +6,7 @@ import {
   deleteDocument,
 } from "../../services/documentService.js";
 import { validateFile } from "../../utils/file.js";
-import DocumentItem from "../DocumentItem.jsx";
+import DocumentCard from "../DocumentCard.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
 
 const PetDocuments = ({ petId }) => {
@@ -87,9 +87,9 @@ const PetDocuments = ({ petId }) => {
       )}
 
       {documents.length > 0 && (
-        <ul className="card doc-list">
+        <ul className="doc-grid">
           {documents.map((doc) => (
-            <DocumentItem key={doc._id} doc={doc} onDelete={setToDelete} />
+            <DocumentCard key={doc._id} doc={doc} onDelete={setToDelete} />
           ))}
         </ul>
       )}

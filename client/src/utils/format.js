@@ -9,3 +9,6 @@ export const formatDate = (value) =>
     : "";
 
 export const toDateInput = (value) => (value ? value.slice(0, 10) : "");
+
+export const formatShortDate = (value) =>
+  value ? new Date(value).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', timeZone: 'UTC' }) : '';

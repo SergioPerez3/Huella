@@ -13,6 +13,9 @@ import ConfirmDialog from "../components/ConfirmDialog.jsx";
 import PetSummary from "../components/pet/PetSummary.jsx";
 import PetHealth from "../components/pet/PetHealth.jsx";
 import PetDocuments from "../components/pet/PetDocuments.jsx";
+import PetWeight from "../components/pet/PetWeight.jsx";
+import PetFeeding from "../components/pet/PetFeeding.jsx";
+import PetExpenses from "../components/pet/PetExpenses.jsx";
 
 const tabs = [
   { key: "summary", label: "Resumen" },
@@ -169,12 +172,12 @@ const PetDetail = () => {
       <div role="tabpanel">
         {currentTab === "summary" && <PetSummary pet={pet} />}
         {currentTab === "health" && <PetHealth petId={petId} />}
-        {currentTab === "documents" && <PetDocuments petId={petId} />}
-        {!["summary", "health", "documents"].includes(currentTab) && (
-          <div className="card empty-state">
-            <p className="muted">Próximamente</p>
-          </div>
+        {currentTab === "feeding" && (
+          <PetFeeding pet={pet} onUpdated={setPet} />
         )}
+        {currentTab === "weight" && <PetWeight petId={petId} />}
+        {currentTab === "expenses" && <PetExpenses petId={petId} />}
+        {currentTab === "documents" && <PetDocuments petId={petId} />}
       </div>
 
       <ConfirmDialog
