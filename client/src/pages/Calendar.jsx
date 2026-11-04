@@ -24,6 +24,7 @@ const Calendar = () => {
   const [dialog, setDialog] = useState({ open: false, task: null });
   const [toDelete, setToDelete] = useState(null);
   const [busy, setBusy] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const refresh = () => setVersion((v) => v + 1);
   const actions = useTaskActions(refresh);
@@ -37,6 +38,13 @@ const Calendar = () => {
       })
       .catch((err) => setLoadError(err.message));
   }, [range, version]);
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 767px)");
+    const handleChange = (e) => setIsMobile(e.matches);
+    query.addEventListener("change", handleChange);
+    return () => query.removeEventListener("change", handleChange);
+  }, []);
 
   const handleDatesSet = (info) => {
     const from = info.start.toISOString();
@@ -97,9 +105,7 @@ const Calendar = () => {
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             locale={esLocale}
-            initialView={
-              window.innerWidth < 768 ? "timeGridDay" : "dayGridMonth"
-            }
+            initialView={isMobile ? "timeGridDay" : "dayGridMonth"}
             headerToolbar={{
               left: "prev,next today",
               center: "title",
@@ -116,6 +122,7 @@ const Calendar = () => {
             dayCellClassNames={(arg) =>
               localDateKey(arg.date) === selected ? ["selected-day"] : []
             }
+            key={isMobile ? "mobile" : "desktop"}
           />
         </div>
 
