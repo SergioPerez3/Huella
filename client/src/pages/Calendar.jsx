@@ -12,6 +12,7 @@ import { taskTypes, localDateKey, formatLongDate } from "../utils/tasks.js";
 import TaskItem from "../components/TaskItem.jsx";
 import TaskDialog from "../components/TaskDialog.jsx";
 import ConfirmDialog from "../components/ConfirmDialog.jsx";
+import TaskLegend from "../components/TaskLegend.jsx";
 
 const Calendar = () => {
   const pets = usePets();
@@ -58,7 +59,9 @@ const Calendar = () => {
     const color = (taskTypes[task.type] || taskTypes.other).color;
     return {
       id: task._id,
-      title: task.title,
+      title: petName(task.petId)
+        ? `${task.title} (${petName(task.petId)})`
+        : task.title,
       start: task.dueAt,
       backgroundColor: color,
       borderColor: color,
@@ -90,6 +93,7 @@ const Calendar = () => {
 
       <div className="calendar-layout">
         <div className="card calendar-box">
+          <TaskLegend />
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             locale={esLocale}

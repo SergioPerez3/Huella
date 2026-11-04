@@ -78,3 +78,21 @@ export const deleteRecord = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getAllRecords = async (req, res, next) => {
+  try {
+    const { type, petId } = req.query;
+    const limit = Math.min(parseInt(req.query.limit) || 100, 200);
+
+    const filter = { owner: req.user.id };
+    if (type) filter.type = type;
+    if (petId) filter.petId = petId;
+
+    const records = await HealthRecord.find(filter)
+      .sort({ date: -1 })
+      .limit(limit);
+    res.status(200).json({ data: records });
+  } catch (error) {
+    next(error);
+  }
+};

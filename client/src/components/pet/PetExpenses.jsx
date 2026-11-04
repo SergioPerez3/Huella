@@ -26,7 +26,7 @@ const emptyForm = () => ({
 });
 const categoryOf = (key) => categories[key] || categories.other;
 
-const PetExpenses = ({ petId }) => {
+const PetExpenses = ({ petId, pets }) => {
   const [month, setMonth] = useState(today().slice(0, 7));
   const [summary, setSummary] = useState(null);
   const [expenses, setExpenses] = useState([]);
@@ -41,10 +41,11 @@ const PetExpenses = ({ petId }) => {
 
   useEffect(() => {
     const { from, to } = monthRange(month);
+    const scope = petId ? { petId } : {};
     setLoading(true);
     Promise.all([
-      getExpenseSummary({ month, petId }),
-      getExpenses({ petId, from, to, limit: 100 }),
+      getExpenseSummary({ month, ...scope }),
+      getExpenses({ ...scope, from, to, limit: 100 }),
     ])
       .then(([summaryRes, listRes]) => {
         setSummary(summaryRes.data);
@@ -60,7 +61,7 @@ const PetExpenses = ({ petId }) => {
     setForm({ ...form, [e.target.name]: e.target.value });
 
   const resetForm = () => {
-    setForm(emptyForm());
+    setForm({ ...emptyForm(), petId: form.petId });
     setEditingId(null);
   };
 
@@ -73,8 +74,10 @@ const PetExpenses = ({ petId }) => {
     setError("");
     setSubmitting(true);
     try {
+      const target = petId || form.petId || pets?.[0]?._id;
+      if (!target) return setError("Primero añade una mascota");
       const body = {
-        petId,
+        petId: target,
         amount,
         category: form.category,
         date: form.date,
@@ -97,6 +100,7 @@ const PetExpenses = ({ petId }) => {
   const startEdit = (expense) => {
     setEditingId(expense._id);
     setForm({
+      petId: expense.petId,
       date: toDateInput(expense.date),
       amount: (expense.amount / 100).toFixed(2),
       category: expense.category,
@@ -140,6 +144,24 @@ const PetExpenses = ({ petId }) => {
       </div>
 
       <form className="card expense-form" onSubmit={handleSubmit}>
+        {pets && !petId && (
+          <div className="field">
+            <label htmlFor="expense-pet">Mascota</label>
+            <select
+              id="expense-pet"
+              name="petId"
+              value={form.petId || pets[0]?._id || ""}
+              onChange={handleChange}
+              disabled={Boolean(editingId)}
+            >
+              {pets.map((pet) => (
+                <option key={pet._id} value={pet._id}>
+                  {pet.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
         <div className="field">
           <label htmlFor="expense-date">Fecha</label>
           <input
@@ -276,6 +298,14 @@ const PetExpenses = ({ petId }) => {
                   {expense.description || categoryOf(expense.category).label}
                 </strong>
                 <span className="muted">
+                  {pets && (
+                    <>
+                      <strong className="pet-tag">
+                        {pets.find((p) => p._id === expense.petId)?.name}
+                      </strong>{" "}
+                      ·{" "}
+                    </>
+                  )}
                   {categoryOf(expense.category).label} ·{" "}
                   {formatDate(expense.date)}
                 </span>

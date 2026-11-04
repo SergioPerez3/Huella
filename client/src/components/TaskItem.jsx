@@ -53,7 +53,11 @@ const TaskItem = ({
       <div className="task-main">
         <strong>{task.title}</strong>
         <span className={`muted ${overdue ? "text-danger" : ""}`}>
-          {petName && `${petName} · `}
+          {petName && (
+            <>
+              <strong className="pet-tag">{petName}</strong> ·{" "}
+            </>
+          )}
           {when}
           {task.status === "skipped" && " · Omitida"}
         </span>

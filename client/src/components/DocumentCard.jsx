@@ -9,7 +9,7 @@ import {
 import { formatSize } from "../utils/file.js";
 import { thumbnailUrl, downloadUrl } from "../utils/cloudinary.js";
 
-const DocumentCard = ({ doc, onDelete }) => {
+const DocumentCard = ({ doc, petName, onDelete }) => {
   const [thumbFailed, setThumbFailed] = useState(false);
   const isPdf = doc.mimeType === "application/pdf";
   const Fallback = isPdf ? FiFileText : FiImage;
@@ -37,6 +37,7 @@ const DocumentCard = ({ doc, onDelete }) => {
       </a>
       <div className="doc-info">
         <strong title={doc.name}>{doc.name}</strong>
+        {petName && <span className="pet-tag">{petName}</span>}
         <span className="muted">{formatSize(doc.size)}</span>
       </div>
       <div className="doc-actions">

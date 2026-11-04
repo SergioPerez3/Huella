@@ -7,3 +7,6 @@ export const uploadDocument = (petId, formData) =>
 
 export const deleteDocument = (petId, id) =>
   request(`/pets/${petId}/documents/${id}`, { method: "DELETE" });
+
+export const getAllDocuments = (params = {}) =>
+  request(`/documents?${new URLSearchParams(params)}`);

@@ -7,6 +7,7 @@ import { localDateKey } from "../utils/tasks.js";
 import TaskItem from "../components/TaskItem.jsx";
 import TaskDialog from "../components/TaskDialog.jsx";
 import ConfirmDialog from "../components/ConfirmDialog.jsx";
+import TaskLegend from "../components/TaskLegend.jsx";
 
 const tabs = [
   { key: "pending", label: "Pendientes" },
@@ -118,6 +119,7 @@ const Tasks = () => {
           ))}
         </select>
       </div>
+      <TaskLegend />
 
       {(loadError || actions.error) && (
         <p role="alert">{loadError || actions.error}</p>

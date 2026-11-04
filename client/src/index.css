@@ -1043,3 +1043,134 @@ a.pet-card:hover {
     gap: 0.5rem;
   }
 }
+/* ===== Task legend and pet tag ===== */
+.task-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.task-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.pet-tag {
+  display: inline-block;
+  padding: 0 0.5rem;
+  border-radius: 999px;
+  background: var(--green-100);
+  color: var(--green-800);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+@media (max-width: 767px) {
+  .task-legend {
+    gap: 0.3rem 0.75rem;
+    font-size: 0.8rem;
+  }
+}
+/* ===== Health page ===== */
+.health-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.health-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.health-row:last-child {
+  border-bottom: 0;
+}
+.health-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+.health-notes {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+}
+.health-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+}
+.health-due {
+  font-weight: 700;
+  color: var(--green-800);
+  white-space: nowrap;
+}
+.health-due.is-soon {
+  color: var(--orange);
+}
+.upload-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+  align-items: end;
+}
+.doc-info .pet-tag {
+  align-self: flex-start;
+  margin-top: 0.2rem;
+}
+
+@media (max-width: 767px) {
+  .health-row {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .health-side {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+}
+/* ===== Selects in headers and expense form ===== */
+.page-header select,
+.toolbar select {
+  width: auto;
+  min-width: 220px;
+  max-width: 100%;
+}
+
+.expense-form {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+.expense-form select {
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 767px) {
+  .page-header select,
+  .toolbar select {
+    width: 100%;
+  }
+}
+/* ===== Calendar side panel tasks ===== */
+.calendar-layout .task-item {
+  flex-wrap: wrap;
+  row-gap: 0.4rem;
+}
+.calendar-layout .task-main {
+  flex: 1 1 140px;
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+.calendar-layout .task-item .icon-btn:first-of-type {
+  margin-left: auto;
+}

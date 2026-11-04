@@ -1,7 +1,7 @@
-import mongoose from 'mongoose';
-import Document from '../models/Document.js';
-import HealthRecord from '../models/HealthRecord.js';
-import { uploadBuffer, deleteFile } from '../services/uploadService.js';
+import mongoose from "mongoose";
+import Document from "../models/Document.js";
+import HealthRecord from "../models/HealthRecord.js";
+import { uploadBuffer, deleteFile } from "../services/uploadService.js";
 
 export const getDocuments = async (req, res, next) => {
   try {
@@ -22,10 +22,11 @@ export const createDocument = async (req, res, next) => {
       const valid =
         mongoose.isValidObjectId(recordId) &&
         (await HealthRecord.exists({ _id: recordId, petId: req.pet._id }));
-      if (!valid) return res.status(404).json({ error: { message: 'Record not found' } });
+      if (!valid)
+        return res.status(404).json({ error: { message: "Record not found" } });
     }
 
-    const result = await uploadBuffer(req.file.buffer, 'documents');
+    const result = await uploadBuffer(req.file.buffer, "documents");
     const document = await Document.create({
       owner: req.user.id,
       petId: req.pet._id,
@@ -48,11 +49,25 @@ export const deleteDocument = async (req, res, next) => {
     const document = mongoose.isValidObjectId(req.params.id)
       ? await Document.findOne({ _id: req.params.id, petId: req.pet._id })
       : null;
-    if (!document) return res.status(404).json({ error: { message: 'Document not found' } });
+    if (!document)
+      return res.status(404).json({ error: { message: "Document not found" } });
 
     await deleteFile(document.publicId, document.resourceType);
     await document.deleteOne();
-    res.status(200).json({ data: { message: 'Document deleted' } });
+    res.status(200).json({ data: { message: "Document deleted" } });
+  } catch (error) {
+    next(error);
+  }
+};
+export const getAllDocuments = async (req, res, next) => {
+  try {
+    const filter = { owner: req.user.id };
+    if (req.query.petId) filter.petId = req.query.petId;
+
+    const documents = await Document.find(filter)
+      .sort({ createdAt: -1 })
+      .limit(200);
+    res.status(200).json({ data: documents });
   } catch (error) {
     next(error);
   }

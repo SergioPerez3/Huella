@@ -14,3 +14,6 @@ export const updateHealthRecord = (petId, id, data) =>
 
 export const deleteHealthRecord = (petId, id) =>
   request(`/pets/${petId}/health/${id}`, { method: "DELETE" });
+
+export const getAllHealthRecords = (params = {}) =>
+  request(`/health-records?${new URLSearchParams(params)}`);
