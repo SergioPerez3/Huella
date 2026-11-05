@@ -14,6 +14,7 @@ import ConfirmDialog from "../components/ConfirmDialog.jsx";
 import TaskLegend from "../components/TaskLegend.jsx";
 import { FiPlus, FiCalendar } from "react-icons/fi";
 import PageHeader from "../components/PageHeader.jsx";
+import { taskIcons } from "../utils/taskIcons.js";
 
 const Calendar = () => {
   const pets = usePets();
@@ -68,16 +69,42 @@ const Calendar = () => {
     const color = (taskTypes[task.type] || taskTypes.other).color;
     return {
       id: task._id,
-      title: petName(task.petId)
-        ? `${task.title} (${petName(task.petId)})`
-        : task.title,
+      title: task.title,
       start: task.dueAt,
-      backgroundColor: color,
+      backgroundColor: `color-mix(in srgb, ${color} 16%, #fff)`,
       borderColor: color,
+      textColor: "#1f2d2a",
       classNames: task.status === "pending" ? [] : ["fc-closed"],
-      extendedProps: { dateKey: localDateKey(task.dueAt) },
+      extendedProps: {
+        dateKey: localDateKey(task.dueAt),
+        type: task.type,
+        color,
+        pet: petName(task.petId),
+      },
     };
   });
+
+  const renderEvent = (arg) => {
+    const { type, color, pet } = arg.event.extendedProps;
+    const Icon = taskIcons[type] || taskIcons.other;
+    return (
+      <div
+        className={`ev ${arg.view.type === "dayGridMonth" ? "ev-month" : ""}`}
+        title={pet ? `${arg.event.title} (${pet})` : arg.event.title}
+        style={{
+          background: `color-mix(in srgb, ${color} 16%, #fff)`,
+          borderLeft: `4px solid ${color}`,
+        }}
+      >
+        <Icon className="ev-icon" style={{ color }} aria-hidden="true" />
+        <div className="ev-text">
+          {arg.timeText && <span className="ev-time">{arg.timeText}</span>}
+          <strong>{arg.event.title}</strong>
+          {pet && <span className="ev-pet">{pet}</span>}
+        </div>
+      </div>
+    );
+  };
 
   const dayTasks = tasks
     .filter((task) => localDateKey(task.dueAt) === selected)
@@ -105,7 +132,6 @@ const Calendar = () => {
 
       <div className="calendar-layout">
         <div className="card calendar-box">
-          <TaskLegend />
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             locale={esLocale}
@@ -116,6 +142,7 @@ const Calendar = () => {
               right: "dayGridMonth,timeGridWeek,timeGridDay",
             }}
             events={events}
+            eventContent={renderEvent}
             height="auto"
             nowIndicator
             scrollTime="07:00:00"
@@ -159,6 +186,7 @@ const Calendar = () => {
           >
             <FiPlus aria-hidden="true" /> Añadir tarea a este día
           </button>
+          <TaskLegend />
         </aside>
       </div>
 

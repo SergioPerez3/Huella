@@ -2733,3 +2733,155 @@ html {
     transform: none;
   }
 }
+
+/* ===== Calendar events ===== */
+
+.fc .fc-event {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  cursor: pointer;
+}
+.ev {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  min-width: 0;
+  width: 100%;
+  padding: 3px 6px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  line-height: 1.25;
+}
+.ev:hover {
+  filter: brightness(0.97);
+}
+.ev-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  font-size: 0.9rem;
+}
+.ev-text {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.35rem;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: brak-word;
+}
+.ev-time {
+  font-weight: 600;
+  opacity: 0.7;
+}
+.ev-text strong {
+  font-weight: 700;
+  color: var(--text);
+}
+.ev-pet {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+.fc .fc-event.fc-closed {
+  opacity: 0.55;
+}
+
+/* Leyenda compacta en el panel lateral */
+.day-panel .task-legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem 0.75rem;
+  margin: 1rem 0 0;
+  padding: 0.75rem 0 0;
+  border-top: 1px solid var(--border);
+  list-style: none;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.day-panel .task-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* ===== Calendar responsive ===== */
+.calendar-box {
+  container: calbox / inline-size;
+}
+.calendar-box .fc .fc-toolbar {
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.calendar-box .fc .fc-toolbar-title {
+  font-size: 1.05rem;
+}
+
+/* Calendario estrecho: solo icono en las celdas del mes */
+@container calbox (max-width: 480px) {
+  .calendar-box .fc .fc-toolbar-title {
+    order: -1;
+    width: 100%;
+    text-align: center;
+  }
+  .ev-month {
+    justify-content: center;
+    padding: 3px 0;
+    border-left-width: 3px;
+  }
+  .ev-month .ev-text {
+    display: none;
+  }
+  .ev-month .ev-icon {
+    margin-top: 0;
+  }
+}
+
+/* Layout: calendario + panel a la derecha también en tablet */
+.calendar-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 1.25rem;
+  align-items: start;
+}
+@media (max-width: 1199px) {
+  .calendar-layout {
+    grid-template-columns: minmax(0, 1fr) 270px;
+  }
+}
+@media (max-width: 767px) {
+  .calendar-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .calendar-layout {
+    grid-template-columns: minmax(0, 1fr) 240px;
+    gap: 1rem;
+  }
+}
+/* ===== Emergency tab layout ===== */
+.emergency-grid {
+  grid-template-columns: minmax(0, 1fr) 340px;
+  max-width: 1100px;
+}
+.emergency-grid > .form {
+  max-width: none;
+  width: 100%;
+}
+.emergency-grid .qr-panel {
+  position: sticky;
+  top: 1rem;
+}
+
+@media (max-width: 1023px) {
+  .emergency-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .emergency-grid .qr-panel {
+    position: static;
+  }
+}
+
