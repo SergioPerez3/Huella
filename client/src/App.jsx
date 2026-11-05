@@ -1,7 +1,7 @@
 import {
   createBrowserRouter,
   RouterProvider,
-  Navigate,
+  // Navigate,
 } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { requiredAuth } from "./loaders/requiredAuth.js";
@@ -20,17 +20,17 @@ import Calendar from "./pages/Calendar.jsx";
 import Health from "./pages/Health.jsx";
 import Expenses from "./pages/Expenses.jsx";
 import Settings from "./pages/Settings.jsx";
-import EmergencyCard from "./pages/EmergencyCard.jsx";
+// import EmergencyCard from "./pages/EmergencyCard.jsx";
+import Landing from "./pages/Landing.jsx";
+import { redirectIfAuth } from "./loaders/redirectIfAuth.js";
 
 const router = createBrowserRouter([
+  { path: "/", element: <Landing />, loader: redirectIfAuth },
   {
-    path: "/",
     element: <PublicLayout />,
     children: [
-      { index: true, element: <Navigate to="/dashboard" replace /> },
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
-      { path: 'e/:token', element: <EmergencyCard /> },
     ],
   },
   {

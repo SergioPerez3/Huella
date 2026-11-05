@@ -1,11 +1,12 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiAlertTriangle } from "react-icons/fi";
 import useAuth from "../hooks/useAuth.js";
 import DeleteAccountDialog from "../components/DeleteAccountDialog.jsx";
 import Avatar from "../components/Avatar.jsx";
 import PresetAvatar from "../components/PresetAvatar.jsx";
 import { avatarPresets } from "../utils/avatars.js";
+import { FiAlertTriangle, FiSettings } from "react-icons/fi";
+import PageHeader from "../components/PageHeader.jsx";
 
 const Settings = () => {
   const { user, updateProfile, removeAccount, uploadAvatar, removeAvatar } =
@@ -69,9 +70,11 @@ const Settings = () => {
 
   return (
     <section>
-      <div className="page-header">
-        <h1>Configuración</h1>
-      </div>
+      <PageHeader
+        icon={FiSettings}
+        title="Configuración"
+        subtitle="Tu perfil y tu cuenta"
+      />
 
       <div className="settings-stack">
         <section className="card">

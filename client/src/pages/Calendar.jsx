@@ -4,7 +4,6 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import esLocale from "@fullcalendar/core/locales/es";
-import { FiPlus } from "react-icons/fi";
 import { getTasks } from "../services/taskService.js";
 import usePets from "../hooks/usePets.js";
 import useTaskActions from "../hooks/useTaskActions.js";
@@ -13,6 +12,8 @@ import TaskItem from "../components/TaskItem.jsx";
 import TaskDialog from "../components/TaskDialog.jsx";
 import ConfirmDialog from "../components/ConfirmDialog.jsx";
 import TaskLegend from "../components/TaskLegend.jsx";
+import { FiPlus, FiCalendar } from "react-icons/fi";
+import PageHeader from "../components/PageHeader.jsx";
 
 const Calendar = () => {
   const pets = usePets();
@@ -84,8 +85,11 @@ const Calendar = () => {
 
   return (
     <section>
-      <div className="page-header">
-        <h1>Calendario</h1>
+      <PageHeader
+        icon={FiCalendar}
+        title="Calendario"
+        subtitle="Planifica paseos, citas y cuidados"
+      >
         <button
           type="button"
           className="btn btn-primary"
@@ -93,7 +97,7 @@ const Calendar = () => {
         >
           <FiPlus aria-hidden="true" /> Nueva tarea
         </button>
-      </div>
+      </PageHeader>
 
       {(loadError || actions.error) && (
         <p role="alert">{loadError || actions.error}</p>

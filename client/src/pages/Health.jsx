@@ -12,6 +12,8 @@ import { formatDate } from "../utils/format.js";
 import { dayDiff, dueText } from "../utils/dates.js";
 import DocumentCard from "../components/DocumentCard.jsx";
 import ConfirmDialog from "../components/ConfirmDialog.jsx";
+import { FiActivity } from "react-icons/fi";
+import PageHeader from "../components/PageHeader.jsx";
 
 const MAX_SIZE = 5 * 1024 * 1024;
 
@@ -127,9 +129,11 @@ const Health = () => {
 
   return (
     <section>
-      <div className="page-header">
-        <h1>Salud</h1>
-      </div>
+      <PageHeader
+        icon={FiActivity}
+        title="Salud"
+        subtitle="Seguimiento, informes y archivos"
+      />
 
       <div className="toolbar">
         <nav

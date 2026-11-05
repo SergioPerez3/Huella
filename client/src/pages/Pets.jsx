@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FiPlus } from "react-icons/fi";
 import { FaPaw } from "react-icons/fa";
 import { getPets } from "../services/petService.js";
 import PetCard from "../components/PetCard.jsx";
+import { FiPlus, FiHeart } from 'react-icons/fi';
+import PageHeader from '../components/PageHeader.jsx';
 
 const Pets = () => {
   const [pets, setPets] = useState([]);
@@ -19,12 +20,15 @@ const Pets = () => {
 
   return (
     <section>
-      <div className="page-header">
-        <h1>Mis mascotas</h1>
+      <PageHeader
+        icon={FiHeart}
+        title="Mis mascotas"
+        subtitle="Las fichas de toda tu familia peluda"
+      >
         <Link to="/pets/new" className="btn btn-primary">
           <FiPlus aria-hidden="true" /> Añadir mascota
         </Link>
-      </div>
+      </PageHeader>
 
       {error && <p role="alert">{error}</p>}
       {loading && <p className="muted">Cargando...</p>}

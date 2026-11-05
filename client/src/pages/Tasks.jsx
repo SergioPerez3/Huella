@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { FiPlus } from "react-icons/fi";
 import { getTasks } from "../services/taskService.js";
 import usePets from "../hooks/usePets.js";
 import useTaskActions from "../hooks/useTaskActions.js";
@@ -8,6 +7,8 @@ import TaskItem from "../components/TaskItem.jsx";
 import TaskDialog from "../components/TaskDialog.jsx";
 import ConfirmDialog from "../components/ConfirmDialog.jsx";
 import TaskLegend from "../components/TaskLegend.jsx";
+import PageHeader from "../components/PageHeader.jsx";
+import { FiPlus, FiCheckSquare } from 'react-icons/fi';
 
 const tabs = [
   { key: "pending", label: "Pendientes" },
@@ -77,8 +78,11 @@ const Tasks = () => {
 
   return (
     <section>
-      <div className="page-header">
-        <h1>Tareas</h1>
+      <PageHeader
+        icon={FiCheckSquare}
+        title="Tareas"
+        subtitle="Lo que toca hacer hoy y esta semana"
+      >
         <button
           type="button"
           className="btn btn-primary"
@@ -86,7 +90,7 @@ const Tasks = () => {
         >
           <FiPlus aria-hidden="true" /> Nueva tarea
         </button>
-      </div>
+      </PageHeader>
 
       <div className="toolbar">
         <nav

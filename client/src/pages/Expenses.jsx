@@ -1,6 +1,8 @@
 import { useState } from "react";
 import usePets from "../hooks/usePets.js";
 import PetExpenses from "../components/pet/PetExpenses.jsx";
+import { FiDollarSign } from "react-icons/fi";
+import PageHeader from "../components/PageHeader.jsx";
 
 const Expenses = () => {
   const pets = usePets();
@@ -8,8 +10,11 @@ const Expenses = () => {
 
   return (
     <section>
-      <div className="page-header">
-        <h1>Gastos</h1>
+      <PageHeader
+        icon={FiDollarSign}
+        title="Gastos"
+        subtitle="Controla lo que inviertes en su bienestar"
+      >
         <select
           aria-label="Filtrar por mascota"
           value={petId}
@@ -22,7 +27,7 @@ const Expenses = () => {
             </option>
           ))}
         </select>
-      </div>
+      </PageHeader>
       <PetExpenses petId={petId} pets={pets} />
     </section>
   );
