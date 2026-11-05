@@ -12,7 +12,6 @@ import Register from "./pages/Register.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Pets from "./pages/Pets.jsx";
 import PetNew from "./pages/PetNew.jsx";
-import ComingSoon from "./pages/ComingSoon.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import PetDetail from "./pages/PetDetail.jsx";
 import PetEdit from "./pages/PetEdit.jsx";
@@ -20,6 +19,8 @@ import Tasks from "./pages/Tasks.jsx";
 import Calendar from "./pages/Calendar.jsx";
 import Health from "./pages/Health.jsx";
 import Expenses from "./pages/Expenses.jsx";
+import Settings from "./pages/Settings.jsx";
+import EmergencyCard from "./pages/EmergencyCard.jsx";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,7 @@ const router = createBrowserRouter([
       { index: true, element: <Navigate to="/dashboard" replace /> },
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
+      { path: 'e/:token', element: <EmergencyCard /> },
     ],
   },
   {
@@ -44,6 +46,7 @@ const router = createBrowserRouter([
       { path: "tasks", element: <Tasks /> },
       { path: "health", element: <Health /> },
       { path: "expenses", element: <Expenses /> },
+      { path: "settings", element: <Settings /> },
     ],
   },
   { path: "*", element: <NotFound /> },

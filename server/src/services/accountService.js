@@ -13,6 +13,8 @@ export const deleteAccountData = async (userId) => {
     Pet.find({ owner: userId }),
   ]);
 
+  const user = await User.findById(userId).select("avatar");
+
   await Promise.allSettled([
     ...documents.map((d) => deleteFile(d.publicId, d.resourceType)),
     ...pets
@@ -27,6 +29,7 @@ export const deleteAccountData = async (userId) => {
     Task.deleteMany({ owner: userId }),
     Expense.deleteMany({ owner: userId }),
     Pet.deleteMany({ owner: userId }),
+    ...(user?.avatar?.publicId ? [deleteFile(user.avatar.publicId)] : []),
   ]);
   await User.deleteOne({ _id: userId });
 };

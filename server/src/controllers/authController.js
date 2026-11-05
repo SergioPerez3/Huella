@@ -3,6 +3,8 @@ import bcrypt from "bcryptjs";
 import User from "../models/User.js";
 import pick from "../utils/pick.js";
 import { deleteAccountData } from "../services/accountService.js";
+import { uploadBuffer, deleteFile } from "../services/uploadService.js";
+import { AVATAR_PRESETS } from "../utils/avatarPresets.js";
 
 const isProd = process.env.NODE_ENV === "production";
 const cookieOptions = {
@@ -19,6 +21,7 @@ const publicUser = (u) => ({
   name: u.name,
   email: u.email,
   timezone: u.timezone,
+  avatar: { preset: u.avatar?.preset || null, url: u.avatar?.url || null },
 });
 
 export const register = async (req, res, next) => {
@@ -102,11 +105,32 @@ export const updateMe = async (req, res, next) => {
     if (data.timezone !== undefined && !isValidTimezone(data.timezone)) {
       return res.status(400).json({ error: { message: "Invalid timezone" } });
     }
+
+    const { avatarPreset } = req.body;
+    if (
+      avatarPreset !== undefined &&
+      avatarPreset !== null &&
+      !AVATAR_PRESETS.includes(avatarPreset)
+    ) {
+      return res
+        .status(400)
+        .json({ error: { message: "Invalid avatar preset" } });
+    }
+
     const user = await User.findById(req.user.id);
     if (!user)
       return res.status(401).json({ error: { message: "Not authenticated" } });
+
     Object.assign(user, data);
+
+    let previousFile;
+    if (avatarPreset !== undefined) {
+      previousFile = user.avatar?.publicId;
+      user.avatar = { preset: avatarPreset || undefined };
+    }
+
     await user.save();
+    if (previousFile) await deleteFile(previousFile).catch(() => {});
     res.status(200).json({ data: publicUser(user) });
   } catch (error) {
     next(error);
@@ -130,6 +154,39 @@ export const deleteMe = async (req, res, next) => {
     await deleteAccountData(user._id);
     res.clearCookie("token", cookieOptions);
     res.status(200).json({ data: { message: "Account deleted" } });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const uploadAvatar = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user)
+      return res.status(401).json({ error: { message: "Not authenticated" } });
+
+    const result = await uploadBuffer(req.file.buffer, "avatars");
+    const previousFile = user.avatar?.publicId;
+    user.avatar = { url: result.secure_url, publicId: result.public_id };
+    await user.save();
+    if (previousFile) await deleteFile(previousFile).catch(() => {});
+    res.status(200).json({ data: publicUser(user) });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteAvatar = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user)
+      return res.status(401).json({ error: { message: "Not authenticated" } });
+
+    const previousFile = user.avatar?.publicId;
+    user.avatar = undefined;
+    await user.save();
+    if (previousFile) await deleteFile(previousFile).catch(() => {});
+    res.status(200).json({ data: publicUser(user) });
   } catch (error) {
     next(error);
   }

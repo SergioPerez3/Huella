@@ -1662,3 +1662,400 @@ a.pet-card:hover {
     background: var(--green-100);
   }
 }
+/* ===== Mobile safety net ===== */
+@media (max-width: 767px) {
+  .app {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sidebar {
+    display: none;
+  }
+  .app-main {
+    min-width: 0;
+  }
+  .topbar {
+    padding: 1rem;
+  }
+  .topbar-logo {
+    display: flex;
+  }
+  .user-name,
+  .logout-text {
+    display: none;
+  }
+  .content {
+    padding: 0 1rem 5.5rem;
+  }
+
+  .dash-top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .dash-pets {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-around;
+    padding: 0.5rem 0.25rem calc(0.5rem + env(safe-area-inset-bottom));
+    background: #fff;
+    border-top: 1px solid var(--border);
+  }
+}
+/* ===== Dashboard banner (photo) ===== */
+.dash-banner {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  min-height: 220px;
+  padding: 2rem;
+  border-radius: var(--radius);
+  color: #fff;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(11, 61, 46, 0.538) 0%,
+      rgba(11, 61, 46, 0.35) 55%,
+      rgba(11, 61, 46, 0) 100%
+    ),
+    url("/banner.jpg") center / cover no-repeat,
+    linear-gradient(120deg, var(--green-900), var(--green-600));
+}
+.dash-banner h2 {
+  margin: 0;
+  max-width: 18ch;
+  font-size: 1.9rem;
+  line-height: 1.15;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+.dash-banner .dash-banner-heart {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  font-size: 1.6rem;
+  opacity: 0.9;
+}
+
+@media (max-width: 767px) {
+  .dash-banner {
+    min-height: 160px;
+    padding: 1.25rem;
+  }
+  .dash-banner h2 {
+    font-size: 1.3rem;
+  }
+}
+/* ===== Dashboard banner fixes ===== */
+.dash-banner {
+  min-height: clamp(200px, 22vw, 300px);
+  background-position:
+    center,
+    center 50%,
+    center;
+}
+.dash-banner h2 {
+  color: #fff;
+}
+
+/* ===== Settings ===== */
+.settings-stack {
+  display: grid;
+  gap: 1.25rem;
+  max-width: 640px;
+}
+.profile-head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+.profile-head h2 {
+  margin: 0;
+}
+.avatar.avatar-lg {
+  width: 64px;
+  height: 64px;
+  font-size: 1.6rem;
+}
+.form-success {
+  color: var(--green-600);
+  font-weight: 700;
+}
+.danger-zone {
+  border: 1px solid #f0c9c9;
+}
+.danger-zone h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--danger);
+}
+.danger-zone .btn {
+  margin-top: 0.75rem;
+}
+
+@media (max-width: 767px) {
+  .settings-stack {
+    max-width: none;
+  }
+}
+/* ===== Pet emergency tab ===== */
+.emergency-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 1.25rem;
+  align-items: start;
+}
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.check-row input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+}
+.check-group {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.check-group legend {
+  padding: 0 0.4rem;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.qr-panel {
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+  text-align: center;
+}
+.qr-label {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: center;
+  width: 100%;
+  max-width: 260px;
+  padding: 1rem;
+  border: 2px dashed var(--green-600);
+  border-radius: 16px;
+  background: #fff;
+}
+.qr-label-title {
+  font-size: 1.2rem;
+  color: var(--danger);
+}
+.qr-box {
+  width: 200px;
+  padding: 8px;
+  background: #fff;
+}
+.qr-label-name {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--green-900);
+}
+.qr-label-hint {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.qr-url {
+  max-width: 100%;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.qr-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+@media (max-width: 1023px) {
+  .emergency-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .qr-label,
+  .qr-label * {
+    visibility: visible;
+  }
+  .qr-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60mm;
+    max-width: none;
+    border: 1px solid #000;
+  }
+}
+
+/* ===== Public emergency card ===== */
+.sos-page {
+  min-height: 100vh;
+  background: var(--cream);
+}
+.sos-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+  background: var(--green-900);
+  color: #fff;
+  font-weight: 700;
+}
+.sos-main {
+  display: grid;
+  justify-items: center;
+  padding: 1.25rem 1rem 2rem;
+}
+.sos-card {
+  width: 100%;
+  max-width: 480px;
+  display: grid;
+  gap: 1.25rem;
+}
+.sos-pet {
+  display: grid;
+  justify-items: center;
+  gap: 0.25rem;
+  text-align: center;
+}
+.sos-pet h1 {
+  margin: 0.5rem 0 0;
+}
+.sos-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: var(--green-100);
+  color: var(--green-600);
+  font-size: 2.5rem;
+}
+.sos-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.sos-lead {
+  margin: 0;
+  text-align: center;
+  font-weight: 600;
+}
+.sos-call {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  padding: 1rem;
+  border-radius: 16px;
+  background: var(--green-800);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+.sos-call svg {
+  font-size: 1.6rem;
+}
+.sos-call span {
+  display: grid;
+}
+.sos-call small {
+  font-size: 0.9rem;
+  font-weight: 600;
+  opacity: 0.85;
+}
+.sos-info {
+  display: grid;
+  gap: 0.9rem;
+  margin: 0;
+}
+.sos-info dt {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+.sos-info dd {
+  margin: 0.15rem 0 0;
+}
+
+/* ===== Avatars ===== */
+.avatar {
+  overflow: hidden;
+}
+.avatar img,
+.avatar svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+.avatar-option {
+  padding: 0;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  overflow: hidden;
+  aspect-ratio: 1;
+  background: none;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.avatar-option:hover:not(:disabled) {
+  transform: scale(1.06);
+}
+.avatar-option.is-selected {
+  border-color: var(--green-600);
+  box-shadow: 0 0 0 2px var(--green-100);
+}
+.avatar-option svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.avatar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+@media (max-width: 767px) {
+  .avatar-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

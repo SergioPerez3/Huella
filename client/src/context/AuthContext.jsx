@@ -4,6 +4,10 @@ import {
   loginUser,
   registerUser,
   logoutUser,
+  updateMe,
+  deleteMe,
+  uploadUserAvatar,
+  deleteUserAvatar,
 } from "../services/authService.js";
 
 export const AuthContext = createContext(null);
@@ -33,9 +37,39 @@ export const AuthProvider = ({ children }) => {
     await logoutUser();
     setUser(null);
   };
+  const updateProfile = async (data) => {
+    const res = await updateMe(data);
+    setUser(res.data);
+  };
+
+  const removeAccount = async (password) => {
+    await deleteMe(password);
+    setUser(null);
+  };
+  const uploadAvatar = async (formData) => {
+    const res = await uploadUserAvatar(formData);
+    setUser(res.data);
+  };
+
+  const removeAvatar = async () => {
+    const res = await deleteUserAvatar();
+    setUser(res.data);
+  };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        login,
+        register,
+        logout,
+        updateProfile,
+        removeAccount,
+        uploadAvatar,
+        removeAvatar,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

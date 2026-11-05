@@ -10,8 +10,11 @@ const weightSchema = new mongoose.Schema(
     petId: { type: mongoose.Schema.Types.ObjectId, ref: "Pet", required: true },
     date: { type: Date, required: true },
     kg: { type: Number, required: true, min: 0 },
+    
   },
   { timestamps: true },
+  
+  
 );
 
 weightSchema.index({ petId: 1, date: 1 });

@@ -24,6 +24,12 @@ import { dayDiff, dueText } from "../utils/dates.js";
 import ExpenseDonut from "../components/ExpenseDonut.jsx";
 
 const speciesLabel = { dog: "Perro", cat: "Gato", other: "Otro" };
+const quotes = [
+  "Porque ellos también forman parte de tu vida",
+  "Cada huella cuenta una historia",
+  "Pequeños cuidados, grandes alegrías",
+  "Su felicidad empieza con tus cuidados",
+];
 
 const TaskRow = ({ task, petName, showDate }) => {
   const type = taskTypes[task.type] || taskTypes.other;
@@ -66,6 +72,7 @@ const Dashboard = () => {
   const weightOf = (id) =>
     latestWeights.find((w) => String(w.petId) === id)?.weights[0]?.kg;
   const monthName = new Date().toLocaleDateString("es-ES", { month: "long" });
+  const quote = quotes[new Date().getDate() % quotes.length];
 
   const todayKey = localDateKey(new Date());
   const todayTasks = tasks.upcoming.filter(
@@ -88,7 +95,14 @@ const Dashboard = () => {
           Ver todas las mascotas
         </Link>
       </div>
-
+      {pets.length > 0 && (
+        <div className="section-head">
+          <h2>Mis mascotas</h2>
+          <Link to="/pets/new" className="btn btn-ghost btn-sm">
+            <FiPlus aria-hidden="true" /> Añadir mascota
+          </Link>
+        </div>
+      )}
       <div className="dash-top">
         {pets.length === 0 ? (
           <div className="card empty-state">
@@ -139,12 +153,6 @@ const Dashboard = () => {
                 </li>
               );
             })}
-            <li>
-              <Link to="/pets/new" className="pet-tile pet-tile-add">
-                <FiPlus aria-hidden="true" size={30} />
-                <span>Añadir mascota</span>
-              </Link>
-            </li>
           </ul>
         )}
 
@@ -264,14 +272,8 @@ const Dashboard = () => {
       </div>
 
       <div className="dash-banner">
-        <FaPaw className="dash-banner-deco" aria-hidden="true" />
-        <div>
-          <h2>Porque ellos también forman parte de tu vida</h2>
-          <p>Cuida de cada detalle: salud, tareas y gastos en un solo lugar.</p>
-        </div>
-        <Link to="/calendar" className="btn btn-light">
-          Ver calendario
-        </Link>
+        <FiHeart className="dash-banner-heart" aria-hidden="true" />
+        <h2>{quote}</h2>
       </div>
     </section>
   );

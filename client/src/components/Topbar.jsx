@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiLogOut, FiMenu } from "react-icons/fi";
 import useAuth from "../hooks/useAuth.js";
 import Logo from "./Logo.jsx";
+import Avatar from "./Avatar.jsx";
 
 const Topbar = ({ onMenu }) => {
   const { user, logout } = useAuth();
@@ -24,7 +25,7 @@ const Topbar = ({ onMenu }) => {
       </button>
       <Logo className="topbar-logo" />
       <Link to="/settings" className="user-chip">
-        <span className="avatar">{user?.name?.[0]?.toUpperCase()}</span>
+        <Avatar user={user} />
         <span className="user-name">{user?.name}</span>
       </Link>
       <button

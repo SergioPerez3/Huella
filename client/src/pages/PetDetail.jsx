@@ -16,6 +16,7 @@ import PetDocuments from "../components/pet/PetDocuments.jsx";
 import PetWeight from "../components/pet/PetWeight.jsx";
 import PetFeeding from "../components/pet/PetFeeding.jsx";
 import PetExpenses from "../components/pet/PetExpenses.jsx";
+import PetEmergency from "../components/pet/PetEmergency.jsx";
 
 const tabs = [
   { key: "summary", label: "Resumen" },
@@ -24,6 +25,7 @@ const tabs = [
   { key: "weight", label: "Peso" },
   { key: "expenses", label: "Gastos" },
   { key: "documents", label: "Documentos" },
+  { key: 'emergency', label: 'Emergencia' },
 ];
 
 const PetDetail = () => {
@@ -178,6 +180,7 @@ const PetDetail = () => {
         {currentTab === "weight" && <PetWeight petId={petId} />}
         {currentTab === "expenses" && <PetExpenses petId={petId} />}
         {currentTab === "documents" && <PetDocuments petId={petId} />}
+        {currentTab === 'emergency' && <PetEmergency pet={pet} onChange={setPet} />}
       </div>
 
       <ConfirmDialog
