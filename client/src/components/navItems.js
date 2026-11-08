@@ -6,6 +6,7 @@ import {
   FiActivity,
   FiDollarSign,
   FiSettings,
+  FiMapPin,
 } from "react-icons/fi";
 
 export const mainNav = [
@@ -39,6 +40,7 @@ export const mainNav = [
   },
   { to: "/health", label: "Salud", short: "Salud", Icon: FiActivity },
   { to: "/expenses", label: "Gastos", short: "Gastos", Icon: FiDollarSign },
+  { to: "/services", label: "Servicios", Icon: FiMapPin },
 ];
 
 export const settingsNav = {

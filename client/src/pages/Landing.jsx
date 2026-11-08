@@ -14,6 +14,7 @@ import {
   FiUserPlus,
 } from "react-icons/fi";
 import Logo from "../components/Logo.jsx";
+import ServiceArt from "../components/ServiceArt.jsx";
 
 const Photo = ({ src, alt = "", className = "" }) => {
   const [failed, setFailed] = useState(false);
@@ -66,6 +67,7 @@ const Landing = () => (
       <Logo />
       <nav className="l-links" aria-label="Secciones">
         <a href="#funciones">Funciones</a>
+        <a href="#servicios">Servicios</a>
         <a href="#emergencia">Tarjeta de emergencia</a>
         <a href="#como-funciona">Cómo funciona</a>
       </nav>
@@ -137,6 +139,30 @@ const Landing = () => (
               <span className="muted">Escanea y avisa</span>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="l-section" id="servicios">
+        <div className="l-head">
+          <h2>Encuentra servicios cerca de ti</h2>
+          <p className="muted">
+            Veterinarios, peluquerías, residencias y más, ordenados por
+            distancia en cualquier ciudad.
+          </p>
+        </div>
+        <div className="l-services">
+          {[
+            ["veterinarios", "Veterinarios", "Clínicas y urgencias"],
+            ["peluquerias", "Peluquerías", "Baño, corte y cuidado"],
+            ["residencias", "Residencias", "Para cuando viajas"],
+            ["paseadores", "Paseadores", "Y cuidadores de confianza"],
+          ].map(([key, title, text]) => (
+            <article key={key} className="l-service">
+              <ServiceArt category={key} />
+              <strong>{title}</strong>
+              <span>{text}</span>
+            </article>
+          ))}
         </div>
       </section>
 

@@ -1,7 +1,17 @@
 import { SERVICE_EXAMPLES } from "../data/communityServices.js";
 
-const OVERPASS_URL =
-  process.env.OVERPASS_URL || "https://overpass-api.de/api/interpreter";
+const OVERPASS_URLS = (
+  process.env.OVERPASS_URLS ||
+  [
+    "https://ovp.dresel.systems/api/interpreter",
+    "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+    "https://overpass.private.coffee/api/interpreter",
+    "https://overpass-api.de/api/interpreter",
+  ].join(",")
+)
+  .split(",")
+  .map((url) => url.trim())
+  .filter(Boolean);
 const USER_AGENT =
   process.env.GEO_USER_AGENT ||
   "Huella/1.0 (+https://github.com/SergioPerez3/Huella)";
@@ -99,47 +109,75 @@ export const normalize = (element, origin) => {
   };
 };
 
-const fetchOsm = async (center, radiusKm) => {
-  const around = `around:${Math.round(radiusKm * 1000)},${center.lat},${center.lng}`;
-  const query = `[out:json][timeout:25];(${OSM_FILTERS.map((f) => `nwr(${around})${f};`).join("")});out center tags 600;`;
+const OVERPASS_ERROR =
+  "El servicio de mapas no responde ahora mismo. Inténtalo en unos minutos.";
 
-  let res;
-  try {
-    res = await fetch(OVERPASS_URL, {
-      method: "POST",
-      headers: { "User-Agent": USER_AGENT },
-      body: new URLSearchParams({ data: query }),
-      signal: AbortSignal.timeout(30000),
-    });
-  } catch {
-    throw httpError(
-      502,
-      "El servicio de mapas no responde ahora mismo. Inténtalo en unos minutos.",
-    );
+// Rectángulo que contiene el círculo de búsqueda: Overpass lo resuelve mucho más rápido que "around"
+const bbox = (center, radiusKm) => {
+  const dLat = radiusKm / 111.32;
+  const dLng = radiusKm / (111.32 * Math.cos((center.lat * Math.PI) / 180));
+  return [
+    center.lat - dLat,
+    center.lng - dLng,
+    center.lat + dLat,
+    center.lng + dLng,
+  ]
+    .map((v) => v.toFixed(4))
+    .join(",");
+};
+
+const fetchOsm = async (center, radiusKm) => {
+  const box = bbox(center, radiusKm);
+  const query = `[out:json][timeout:15][maxsize:16777216];(${OSM_FILTERS.map((f) => `nwr${f}(${box});`).join("")});out center tags 600;`;
+  for (const url of OVERPASS_URLS) {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "User-Agent": USER_AGENT },
+        body: new URLSearchParams({ data: query }),
+        signal: AbortSignal.timeout(15000),
+      });
+      if (!res.ok) {
+        console.error(`[services] Overpass ${url} respondió ${res.status}`);
+        continue;
+      }
+      const json = await res.json();
+      return json.elements || [];
+    } catch (err) {
+      console.error(`[services] Overpass ${url} falló: ${err.message}`);
+    }
   }
-  if (!res.ok) {
-    throw httpError(
-      502,
-      "El servicio de mapas no responde ahora mismo. Inténtalo en unos minutos.",
-    );
-  }
-  const json = await res.json();
-  return json.elements || [];
+  throw httpError(502, OVERPASS_ERROR);
+};
+
+const inflight = new Map();
+
+const getElements = async (center, radiusKm) => {
+  const key = `${center.lat},${center.lng}:${radiusKm}`;
+  const hit = cache.get(key);
+  if (hit && Date.now() - hit.at < TTL) return hit.value;
+  if (inflight.has(key)) return inflight.get(key);
+
+  const pending = fetchOsm(center, radiusKm)
+    .then((elements) => {
+      if (cache.size >= MAX_CACHE) cache.delete(cache.keys().next().value);
+      cache.set(key, { at: Date.now(), value: elements });
+      return elements;
+    })
+    .catch((err) => {
+      if (hit) return hit.value; // datos antiguos mejor que nada
+      throw err;
+    })
+    .finally(() => inflight.delete(key));
+
+  inflight.set(key, pending);
+  return pending;
 };
 
 export const findPlaces = async (origin, radiusKm) => {
+  // Consultamos con coordenadas redondeadas (~1 km): mejor caché y menos precisión de la necesaria.
   const center = { lat: round(origin.lat, 2), lng: round(origin.lng, 2) };
-  const key = `${center.lat},${center.lng}:${radiusKm}`;
-
-  let elements;
-  const hit = cache.get(key);
-  if (hit && Date.now() - hit.at < TTL) {
-    elements = hit.value;
-  } else {
-    elements = await fetchOsm(center, radiusKm);
-    if (cache.size >= MAX_CACHE) cache.delete(cache.keys().next().value);
-    cache.set(key, { at: Date.now(), value: elements });
-  }
+  const elements = await getElements(center, radiusKm);
 
   const fromOsm = elements.map((el) => normalize(el, origin)).filter(Boolean);
   const examples = SERVICE_EXAMPLES.map((s) => ({

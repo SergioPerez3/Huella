@@ -23,6 +23,7 @@ import Settings from "./pages/Settings.jsx";
 // import EmergencyCard from "./pages/EmergencyCard.jsx";
 import Landing from "./pages/Landing.jsx";
 import { redirectIfAuth } from "./loaders/redirectIfAuth.js";
+import Services from "./pages/Services.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <Landing />, loader: redirectIfAuth },
@@ -46,6 +47,7 @@ const router = createBrowserRouter([
       { path: "tasks", element: <Tasks /> },
       { path: "health", element: <Health /> },
       { path: "expenses", element: <Expenses /> },
+      { path: "services", element: <Services /> },
       { path: "settings", element: <Settings /> },
     ],
   },
