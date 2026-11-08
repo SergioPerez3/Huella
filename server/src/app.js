@@ -11,6 +11,7 @@ import publicRoutes from "./routes/publicRoutes.js";
 import { publicLimiter } from "./middlewares/rateLimiters.js";
 import { notFound, errorHandler } from "./middlewares/errorHandler.js";
 import overviewRoutes from "./routes/overviewRoutes.js";
+import serviceRoutes from "./routes/serviceRoutes.js";
 
 const app = express();
 
@@ -30,7 +31,8 @@ app.use("/api/v1/tasks", taskRoutes);
 app.use("/api/v1/expenses", expenseRoutes);
 app.use("/api/v1/dashboard", dashboardRoutes);
 app.use("/api/v1/public", publicLimiter, publicRoutes);
-app.use('/api/v1', overviewRoutes);
+app.use("/api/v1", overviewRoutes);
+app.use("/api/v1", serviceRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
