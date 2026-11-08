@@ -22,13 +22,13 @@ Interfaz de **HUELLA**, una aplicación para gestionar mascotas. Hecha con **Rea
 ## 🛠️ Tecnologías
 
 - **React + Vite**: interfaz y entorno de desarrollo
-- **React Router**: rutas con `createBrowserRouter` y _loaders_ para proteger las privadas
+- **React Router**: rutas con `createBrowserRouter` y *loaders* para proteger las privadas
 - **Context API**: sesión del usuario (`AuthProvider` y `useAuth`)
 - **FullCalendar**: calendario con vistas de mes, semana y día
 - **Recharts**: gráficos de peso y gastos
 - **qrcode.react**: código QR de la tarjeta de emergencia
 - **react-icons**: iconografía
-- **CSS propio**: variables, grid, `color-mix()` y _container queries_
+- **CSS propio**: variables, grid, `color-mix()` y *container queries*
 - **ESLint**: revisión del código
 
 ## 📁 Estructura
@@ -44,6 +44,7 @@ client/
 │   │   ├── PageHeader.jsx         Cabecera con icono de cada página
 │   │   ├── TaskItem / TaskDialog / TaskLegend
 │   │   ├── ExpenseDonut.jsx       Gráfico de gastos por categoría
+│   │   ├── ServiceCard / ServiceArt   Tarjeta de servicio e ilustraciones SVG por categoría
 │   │   ├── Avatar / PresetAvatar  Avatar de usuario (foto, preset o inicial)
 │   │   ├── ConfirmDialog.jsx      Confirmaciones con <dialog>
 │   │   └── DeleteAccountDialog.jsx
@@ -72,40 +73,41 @@ npm install
 cp .env.example .env
 ```
 
-| Variable       | Descripción                                                             |
-| -------------- | ----------------------------------------------------------------------- |
+| Variable | Descripción |
+|---|---|
 | `VITE_API_URL` | URL base de la API, incluido `/api/v1` (`http://localhost:5000/api/v1`) |
 
 Vite solo lee el `.env` al arrancar: si lo cambias, reinicia `npm run dev`.
 
 ## 📜 Scripts
 
-| Comando           | Qué hace                                 |
-| ----------------- | ---------------------------------------- |
-| `npm run dev`     | Arranca el servidor de desarrollo        |
-| `npm run build`   | Genera el build de producción en `dist/` |
-| `npm run preview` | Sirve el build para probarlo             |
-| `npm run lint`    | Revisa el código con ESLint              |
+| Comando | Qué hace |
+|---|---|
+| `npm run dev` | Arranca el servidor de desarrollo |
+| `npm run build` | Genera el build de producción en `dist/` |
+| `npm run preview` | Sirve el build para probarlo |
+| `npm run lint` | Revisa el código con ESLint |
 
 La web queda en `http://localhost:5173`.
 
 ## 🧭 Rutas
 
-| Ruta                   | Página                                                       | Acceso  |
-| ---------------------- | ------------------------------------------------------------ | ------- |
-| `/`                    | Landing pública (redirige a `/dashboard` si hay sesión)      | Pública |
-| `/login` · `/register` | Acceso y registro                                            | Pública |
-| `/e/:token`            | Tarjeta de emergencia de una mascota                         | Pública |
-| `/dashboard`           | Inicio                                                       | Privada |
-| `/pets` · `/pets/new`  | Mis mascotas                                                 | Privada |
-| `/pets/:id`            | Ficha: resumen, salud, peso, gastos, documentos y emergencia | Privada |
-| `/calendar`            | Calendario                                                   | Privada |
-| `/tasks`               | Tareas                                                       | Privada |
-| `/health`              | Salud de todas las mascotas                                  | Privada |
-| `/expenses`            | Gastos de todas las mascotas                                 | Privada |
-| `/settings`            | Perfil, avatar y borrado de cuenta                           | Privada |
+| Ruta | Página | Acceso |
+|---|---|---|
+| `/` | Landing pública (redirige a `/dashboard` si hay sesión) | Pública |
+| `/login` · `/register` | Acceso y registro | Pública |
+| `/e/:token` | Tarjeta de emergencia de una mascota | Pública |
+| `/dashboard` | Inicio | Privada |
+| `/pets` · `/pets/new` | Mis mascotas | Privada |
+| `/pets/:id` | Ficha: resumen, salud, peso, gastos, documentos y emergencia | Privada |
+| `/calendar` | Calendario | Privada |
+| `/tasks` | Tareas | Privada |
+| `/health` | Salud de todas las mascotas | Privada |
+| `/expenses` | Gastos de todas las mascotas | Privada |
+| `/services` | Servicios cercanos | Privada |
+| `/settings` | Perfil, avatar y borrado de cuenta | Privada |
 
-Las rutas privadas usan el _loader_ `requiredAuth`, que comprueba la sesión antes de pintar la página y redirige a `/login` si no existe.
+Las rutas privadas usan el *loader* `requiredAuth`, que comprueba la sesión antes de pintar la página y redirige a `/login` si no existe.
 
 ## ✨ Funcionalidades
 
@@ -115,6 +117,7 @@ Las rutas privadas usan el _loader_ `requiredAuth`, que comprueba la sesión ant
 - **Calendario** con eventos de color translúcido, icono por tipo, nombre de la mascota y leyenda en el panel lateral.
 - **Tareas** con repeticiones, completar, saltar y filtros.
 - **Salud y Gastos globales** con filtro por mascota.
+- **Servicios cercanos**: banner con buscador de ciudad o código postal (Madrid por defecto), radio de 10, 30 o 50 km, botón «Usar mi ubicación», filtros por categoría con contadores y flechas para desplazarlos en pantallas pequeñas, tarjetas con ilustración propia, distancia, ruta en Google Maps y llamada. Con indicador de carga y aviso de error con botón de reintento.
 - **Tarjeta de emergencia**: formulario, QR en vivo, descarga, etiqueta imprimible y página pública pensada para móvil.
 - **Configuración**: nombre, avatar (ocho predefinidos o foto propia) y borrado de cuenta con confirmación.
 
@@ -122,10 +125,11 @@ Las rutas privadas usan el _loader_ `requiredAuth`, que comprueba la sesión ant
 
 - **Sesión:** la API guarda un JWT en una cookie `httpOnly`. `AuthProvider` pregunta quién eres al cargar y `useAuth()` lo expone a toda la app.
 - **Servicios:** cada llamada vive en `services/` y pasa por un `request()` común que envía cookies, admite `FormData` y convierte los errores del servidor en excepciones con `status`.
-- **Rutas privadas:** los _loaders_ de React Router comprueban la sesión antes de renderizar, sin parpadeos.
+- **Rutas privadas:** los *loaders* de React Router comprueban la sesión antes de renderizar, sin parpadeos.
 - **Fechas:** los días se comparan por fecha de calendario, no por hora, para que "hoy" y "mañana" no cambien con la zona horaria.
 - **Tarjeta de emergencia:** el QR apunta a `/e/:token`. Regenerar el enlace invalida el QR impreso.
-- **Calendario:** cada evento se pinta con su propio contenido (`eventContent`), y en pantallas estrechas pasa a mostrar solo el icono gracias a _container queries_.
+- **Servicios:** la última ciudad buscada se recuerda en `localStorage` (las coordenadas del GPS se guardan redondeadas). Cada búsqueda cancela la anterior, y los filtros por categoría se aplican en el cliente sobre una sola consulta.
+- **Calendario:** cada evento se pinta con su propio contenido (`eventContent`), y en pantallas estrechas pasa a mostrar solo el icono gracias a *container queries*.
 
 ## 🎨 Diseño
 
@@ -136,7 +140,7 @@ Las rutas privadas usan el _loader_ `requiredAuth`, que comprueba la sesión ant
 
 ## 🚀 Próximas versiones
 
-- [ ] Página de servicios cercanos
 - [ ] Botón "Probar demo"
 - [ ] Modo oscuro
+- [ ] Estados vacíos con ilustración
 - [ ] Despliegue

@@ -3313,3 +3313,39 @@ html {
 .svc-error .btn {
   flex-shrink: 0;
 }
+
+.svc-pills-wrap {
+  position: relative;
+  margin-bottom: 1.25rem;
+}
+.svc-pills-wrap .svc-pills {
+  margin-bottom: 0;
+  padding: 0.15rem 0.1rem 0.3rem;
+  scroll-behavior: smooth;
+}
+.svc-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--green-900);
+  font-size: 1.2rem;
+  box-shadow: 0 6px 16px rgba(11, 61, 46, 0.22);
+  cursor: pointer;
+}
+.svc-arrow:hover {
+  background: var(--green-100);
+}
+.svc-arrow-left {
+  left: -6px;
+}
+.svc-arrow-right {
+  right: -6px;
+}

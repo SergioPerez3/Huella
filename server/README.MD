@@ -31,6 +31,7 @@ API REST del proyecto **HUELLA**, una aplicación para gestionar mascotas. Los u
 - **helmet y CORS**: cabeceras de seguridad y origen permitido
 - **Límites de peticiones**: protección de las rutas sensibles
 - **Multer**: recepción de imágenes y documentos en memoria
+- **Nominatim y Overpass (OpenStreetMap)**: búsqueda de ciudades y de servicios cercanos, con caché y servidores de respaldo
 - **Cloudinary**: almacenamiento de fotos, avatares y documentos
 - **dotenv**: variables de entorno
 - **Mocha, Chai y Supertest**: tests de integración
@@ -44,7 +45,8 @@ server/
 │   ├── middleware/       Autenticación, subida de archivos y errorHandler
 │   ├── models/           User, Pet, HealthRecord, Task, Expense, Weight, Document
 │   ├── routes/           Rutas de cada recurso (+ overviewRoutes: listados globales)
-│   ├── services/         Lógica compartida (p. ej. accountService: borrado de cuenta)
+│   ├── services/         accountService (borrado de cuenta), geocodeService y placesService (Servicios)
+│   ├── data/             communityServices: servicios de ejemplo (cuidadores, paseadores, adiestradores)
 │   ├── utils/            Utilidades (avatarPresets, pick…)
 │   └── server.js         Arranque del servidor
 ├── test/
@@ -68,25 +70,27 @@ Crea un archivo `.env` a partir del ejemplo y rellénalo:
 cp .env.example .env
 ```
 
-| Variable                | Descripción                                                |
-| ----------------------- | ---------------------------------------------------------- |
-| `PORT`                  | Puerto del servidor (por defecto `5000`)                   |
-| `MONGO_URI`             | Cadena de conexión de MongoDB                              |
-| `MONGO_URI_TEST`        | Base de datos separada para los tests                      |
-| `CLIENT_URL`            | Origen permitido por CORS (`http://localhost:5173`)        |
-| `JWT_SECRET`            | Clave secreta para firmar los tokens                       |
-| `NODE_ENV`              | `development` o `production`                               |
-| `CLOUDINARY_CLOUD_NAME` | Cloud name de tu cuenta de Cloudinary                      |
-| `CLOUDINARY_API_KEY`    | API Key de Cloudinary                                      |
+| Variable | Descripción |
+|---|---|
+| `PORT` | Puerto del servidor (por defecto `5000`) |
+| `MONGO_URI` | Cadena de conexión de MongoDB |
+| `MONGO_URI_TEST` | Base de datos separada para los tests |
+| `CLIENT_URL` | Origen permitido por CORS (`http://localhost:5173`) |
+| `JWT_SECRET` | Clave secreta para firmar los tokens |
+| `NODE_ENV` | `development` o `production` |
+| `GEO_USER_AGENT` | (Opcional) Identificación de la app ante Nominatim y Overpass |
+| `OVERPASS_URLS` | (Opcional) Servidores de Overpass separados por comas, en orden de preferencia |
+| `CLOUDINARY_CLOUD_NAME` | Cloud name de tu cuenta de Cloudinary |
+| `CLOUDINARY_API_KEY` | API Key de Cloudinary |
 | `CLOUDINARY_API_SECRET` | API Secret de Cloudinary (privado, no se sube nunca a Git) |
 
 ## 📜 Scripts
 
-| Comando       | Qué hace                                                    |
-| ------------- | ----------------------------------------------------------- |
+| Comando | Qué hace |
+|---|---|
 | `npm run dev` | Arranca el servidor con recarga automática (`node --watch`) |
-| `npm start`   | Arranca el servidor con Node                                |
-| `npm test`    | Ejecuta los tests con Mocha                                 |
+| `npm start` | Arranca el servidor con Node |
+| `npm test` | Ejecuta los tests con Mocha |
 
 El servidor queda en `http://localhost:5000`.
 
@@ -106,52 +110,53 @@ npm test
 
 ### Qué se prueba
 
-| Archivo              | Cubre                                                                           |
-| -------------------- | ------------------------------------------------------------------------------- |
-| `overview.test.js`   | Listados globales de salud y documentos, y que solo devuelvan datos del usuario |
-| `avatar.test.js`     | Avatar predefinido, subida y borrado de foto, y validaciones                    |
-| Resto de `*.test.js` | Autenticación, mascotas, tareas, salud, gastos y tarjeta de emergencia          |
+| Archivo | Cubre |
+|---|---|
+| `overview.test.js` | Listados globales de salud y documentos, y que solo devuelvan datos del usuario |
+| `avatar.test.js` | Avatar predefinido, subida y borrado de foto, y validaciones |
+| `places.test.js` | Servicios: distancias, conversión de datos de OpenStreetMap, orden, contadores y error 502 (sin red real) |
+| Resto de `*.test.js` | Autenticación, mascotas, tareas, salud, gastos y tarjeta de emergencia |
 
 ## 🗃️ Modelos
 
 ### User
 
-| Campo      | Tipo   | Notas                                                    |
-| ---------- | ------ | -------------------------------------------------------- |
-| `name`     | String | Obligatorio                                              |
-| `email`    | String | Obligatorio, único, en minúsculas                        |
-| `password` | String | Obligatorio, cifrada. No se devuelve en las consultas    |
-| `avatar`   | Object | `preset` (p1 a p8), `url` y `publicId` de la foto subida |
+| Campo | Tipo | Notas |
+|---|---|---|
+| `name` | String | Obligatorio |
+| `email` | String | Obligatorio, único, en minúsculas |
+| `password` | String | Obligatorio, cifrada. No se devuelve en las consultas |
+| `avatar` | Object | `preset` (p1 a p8), `url` y `publicId` de la foto subida |
 
 ### Pet
 
-| Campo         | Tipo     | Notas                                                                                                                                                |
-| ------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `owner`       | ObjectId | Referencia a `User`. Se asigna desde la sesión                                                                                                       |
-| `name`        | String   | Obligatorio                                                                                                                                          |
-| `species`     | String   | `dog`, `cat` u `other`                                                                                                                               |
-| `breed`       | String   | Opcional                                                                                                                                             |
-| `sex`         | String   | `male` o `female`                                                                                                                                    |
-| `birthDate`   | Date     | Opcional                                                                                                                                             |
-| `microchip`   | String   | Opcional                                                                                                                                             |
-| `allergies`   | [String] | Lista de alergias                                                                                                                                    |
-| `notes`       | String   | Observaciones                                                                                                                                        |
-| `photo`       | Object   | `url` y `publicId` en Cloudinary                                                                                                                     |
-| `inTreatment` | Boolean  | Se muestra en el Inicio                                                                                                                              |
-| `emergency`   | Object   | `enabled`, `publicToken`, `ownerName`, `ownerPhone`, `vetContact`, `instructions`, `conditions`, `showAllergies`, `showMedication`, `showConditions` |
+| Campo | Tipo | Notas |
+|---|---|---|
+| `owner` | ObjectId | Referencia a `User`. Se asigna desde la sesión |
+| `name` | String | Obligatorio |
+| `species` | String | `dog`, `cat` u `other` |
+| `breed` | String | Opcional |
+| `sex` | String | `male` o `female` |
+| `birthDate` | Date | Opcional |
+| `microchip` | String | Opcional |
+| `allergies` | [String] | Lista de alergias |
+| `notes` | String | Observaciones |
+| `photo` | Object | `url` y `publicId` en Cloudinary |
+| `inTreatment` | Boolean | Se muestra en el Inicio |
+| `emergency` | Object | `enabled`, `publicToken`, `ownerName`, `ownerPhone`, `vetContact`, `instructions`, `conditions`, `showAllergies`, `showMedication`, `showConditions` |
 
 ### HealthRecord
 
-| Campo         | Tipo     | Notas                                         |
-| ------------- | -------- | --------------------------------------------- |
-| `owner`       | ObjectId | Referencia a `User`                           |
-| `petId`       | ObjectId | Referencia a `Pet`                            |
-| `type`        | String   | `vaccine`, `deworming`, `visit` o `treatment` |
-| `date`        | Date     | Obligatorio                                   |
-| `title`       | String   | Obligatorio                                   |
-| `notes`       | String   | Opcional                                      |
-| `nextDueDate` | Date     | Próxima fecha (revisión, refuerzo…)           |
-| `treatment`   | Object   | `drug`, `dose`, `startDate`, `endDate`        |
+| Campo | Tipo | Notas |
+|---|---|---|
+| `owner` | ObjectId | Referencia a `User` |
+| `petId` | ObjectId | Referencia a `Pet` |
+| `type` | String | `vaccine`, `deworming`, `visit` o `treatment` |
+| `date` | Date | Obligatorio |
+| `title` | String | Obligatorio |
+| `notes` | String | Opcional |
+| `nextDueDate` | Date | Próxima fecha (revisión, refuerzo…) |
+| `treatment` | Object | `drug`, `dose`, `startDate`, `endDate` |
 
 ### Otros
 
@@ -170,31 +175,74 @@ El login guarda un JWT en una cookie `httpOnly`, que el navegador envía solo en
 
 Base: `/api/v1`. Respuestas correctas: `{ "data": ... }`. Errores: `{ "error": { "message": "..." } }`.
 
-| Método                   | Ruta                              | Auth | Descripción                                       |
-| ------------------------ | --------------------------------- | ---- | ------------------------------------------------- |
-| POST                     | `/auth/register`                  | No   | Registrar usuario                                 |
-| POST                     | `/auth/login`                     | No   | Iniciar sesión                                    |
-| POST                     | `/auth/logout`                    | Sí   | Cerrar sesión                                     |
-| GET                      | `/auth/me`                        | Sí   | Usuario actual                                    |
-| PATCH                    | `/auth/me`                        | Sí   | Editar perfil y avatar predefinido                |
-| DELETE                   | `/auth/me`                        | Sí   | Borrar cuenta y todos sus datos (pide contraseña) |
-| POST                     | `/auth/me/avatar`                 | Sí   | Subir foto de avatar (campo `photo`)              |
-| DELETE                   | `/auth/me/avatar`                 | Sí   | Quitar foto de avatar                             |
-| GET, POST                | `/pets`                           | Sí   | Listar y crear mascotas                           |
-| GET, PATCH, DELETE       | `/pets/:id`                       | Sí   | Ver, editar y borrar una mascota                  |
-| PATCH                    | emergencia de la mascota          | Sí   | Activar y configurar la tarjeta                   |
-| POST                     | `/regenerate` (de la mascota)     | Sí   | Regenerar el enlace público                       |
-| GET                      | `/emergency/:token`               | No   | Datos públicos de la tarjeta                      |
-| GET, POST, PATCH, DELETE | `/tasks`                          | Sí   | CRUD de tareas                                    |
-| POST                     | `/tasks/:id/complete`             | Sí   | Marcar como hecha                                 |
-| POST                     | `/tasks/:id/skip`                 | Sí   | Saltar esta ocurrencia                            |
-| GET                      | `/health-records`                 | Sí   | Salud de todas tus mascotas                       |
-| GET                      | `/documents`                      | Sí   | Documentos de todas tus mascotas                  |
-| GET                      | `/expenses` · `/expenses/summary` | Sí   | Gastos y resumen mensual                          |
-| GET                      | `/dashboard`                      | Sí   | Datos de la pantalla de inicio                    |
-| GET                      | `/health`                         | No   | Comprobación de estado de la API                  |
+| Método | Ruta | Auth | Descripción |
+|---|---|---|---|
+| POST | `/auth/register` | No | Registrar usuario |
+| POST | `/auth/login` | No | Iniciar sesión |
+| POST | `/auth/logout` | Sí | Cerrar sesión |
+| GET | `/auth/me` | Sí | Usuario actual |
+| PATCH | `/auth/me` | Sí | Editar perfil y avatar predefinido |
+| DELETE | `/auth/me` | Sí | Borrar cuenta y todos sus datos (pide contraseña) |
+| POST | `/auth/me/avatar` | Sí | Subir foto de avatar (campo `photo`) |
+| DELETE | `/auth/me/avatar` | Sí | Quitar foto de avatar |
+| GET, POST | `/pets` | Sí | Listar y crear mascotas |
+| GET, PATCH, DELETE | `/pets/:id` | Sí | Ver, editar y borrar una mascota |
+| PATCH | emergencia de la mascota | Sí | Activar y configurar la tarjeta |
+| POST | `/regenerate` (de la mascota) | Sí | Regenerar el enlace público |
+| GET | `/emergency/:token` | No | Datos públicos de la tarjeta |
+| GET, POST, PATCH, DELETE | `/tasks` | Sí | CRUD de tareas |
+| POST | `/tasks/:id/complete` | Sí | Marcar como hecha |
+| POST | `/tasks/:id/skip` | Sí | Saltar esta ocurrencia |
+| GET | `/health-records` | Sí | Salud de todas tus mascotas |
+| GET | `/documents` | Sí | Documentos de todas tus mascotas |
+| GET | `/expenses` · `/expenses/summary` | Sí | Gastos y resumen mensual |
+| GET | `/dashboard` | Sí | Datos de la pantalla de inicio |
+| GET | `/services` | Sí | Servicios cercanos por ciudad, código postal o coordenadas |
+| GET | `/health` | No | Comprobación de estado de la API |
 
 Por mascota existen además las rutas anidadas de **peso, salud, gastos y documentos**.
+
+### Servicios cercanos
+
+`GET /services` busca veterinarios, peluquerías, residencias, tiendas, cuidadores, paseadores y adiestradores alrededor de un punto.
+
+| Parámetro | Descripción |
+|---|---|
+| `q` | Ciudad o código postal (por ejemplo, `Valencia` o `28013`). Si falta, se usa `lat` y `lng` |
+| `lat`, `lng` | Coordenadas (para «usar mi ubicación»). Sin ningún dato, se usa Madrid |
+| `radius` | Radio en km, de 5 a 50 (por defecto 30) |
+| `category` | `todos` (por defecto) o una categoría concreta |
+
+Respuesta de `GET /services?q=Valencia` (recortada):
+
+```json
+{
+  "data": {
+    "origin": { "lat": 39.4697, "lng": -0.3763, "name": "Valencia, Comunitat Valenciana" },
+    "radiusKm": 30,
+    "total": 122,
+    "counts": { "veterinarios": 62, "peluquerias": 17, "residencias": 1 },
+    "places": [
+      {
+        "id": "osm-node-123456",
+        "name": "Clínica Veterinaria Ejemplo",
+        "category": "veterinarios",
+        "label": "Veterinario",
+        "address": "Calle Mayor 1, 46001",
+        "phone": "+34 960 000 000",
+        "website": "https://ejemplo.es/",
+        "hours": "Mo-Fr 09:00-20:00",
+        "lat": 39.47,
+        "lng": -0.376,
+        "distanceKm": 0.5,
+        "source": "osm"
+      }
+    ]
+  }
+}
+```
+
+Los lugares vienen ordenados por distancia. Cuidadores, paseadores y adiestradores casi no existen en OpenStreetMap, así que se completan con servicios de ejemplo (`"demo": true`) solo cerca de Madrid.
 
 ### Ejemplos
 
@@ -226,14 +274,15 @@ Solo salen los campos que el dueño ha activado. Si la tarjeta está desactivada
 
 ## 📋 Códigos de respuesta
 
-| Código        | Cuándo                                                            |
-| ------------- | ----------------------------------------------------------------- |
-| `200` / `201` | Petición correcta / recurso creado                                |
-| `400`         | Datos o ID no válidos, archivo ausente o con formato no permitido |
-| `401`         | Sin sesión, sesión caducada o credenciales incorrectas            |
-| `404`         | Recurso no encontrado (o que no es tuyo)                          |
-| `429`         | Demasiadas peticiones                                             |
-| `500`         | Error del servidor                                                |
+| Código | Cuándo |
+|---|---|
+| `200` / `201` | Petición correcta / recurso creado |
+| `400` | Datos o ID no válidos, archivo ausente o con formato no permitido |
+| `401` | Sin sesión, sesión caducada o credenciales incorrectas |
+| `404` | Recurso no encontrado (o que no es tuyo), o ciudad que no se encuentra en Servicios |
+| `429` | Demasiadas peticiones |
+| `502` | Los servicios de mapas (Nominatim u Overpass) no responden |
+| `500` | Error del servidor |
 
 ## 📝 Notas
 
@@ -245,10 +294,12 @@ Solo salen los campos que el dueño ha activado. Si la tarjeta está desactivada
 - Al cambiar el avatar, borrar un documento o eliminar la cuenta, los archivos asociados también se borran de Cloudinary.
 - El enlace de la tarjeta de emergencia se puede regenerar: el QR anterior deja de funcionar.
 - Los listados globales (`/health-records`, `/documents`) viven en `overviewRoutes`. `/health` se reserva para el healthcheck.
+- **Servicios:** la ciudad se convierte en coordenadas con Nominatim (máximo una petición por segundo, con caché de 24 horas). Los lugares se piden a Overpass con una caja geográfica (más ligera que un radio), con caché de una hora, peticiones iguales simultáneas unificadas y varios servidores de respaldo. Si todos fallan y hay datos antiguos en caché, se usan esos.
+- **Servicios:** las coordenadas se redondean (~1 km) antes de consultar y no se guardan. Los datos de OpenStreetMap los edita cualquiera, así que solo se aceptan enlaces `http` y `https`.
+- **Servicios:** los datos son © colaboradores de OpenStreetMap (licencia ODbL); la web lo indica.
 - Limitación conocida: las tareas repetidas se calculan en UTC, por lo que pueden desplazarse una hora al cambiar el horario de verano.
 
 ## 🚀 Próximas versiones
 
-- [ ] Endpoint de servicios cercanos (veterinarios, peluquerías, residencias)
 - [ ] Cuenta demo con datos de ejemplo
 - [ ] Despliegue

@@ -1,5 +1,12 @@
-import { useState, useEffect } from "react";
-import { FiMapPin, FiSearch, FiCrosshair, FiAlertCircle } from "react-icons/fi";
+import { useState, useEffect, useRef } from "react";
+import {
+  FiMapPin,
+  FiSearch,
+  FiCrosshair,
+  FiAlertCircle,
+  FiChevronLeft,
+  FiChevronRight,
+} from "react-icons/fi";
 import PageHeader from "../components/PageHeader.jsx";
 import ServiceCard from "../components/ServiceCard.jsx";
 import { searchServices } from "../services/servicesService.js";
@@ -56,6 +63,8 @@ const Services = () => {
   const [error, setError] = useState("");
   const [visible, setVisible] = useState(PAGE_SIZE);
   const [attempt, setAttempt] = useState(0);
+  const pillsRef = useRef(null);
+  const [arrows, setArrows] = useState({ left: false, right: false });
 
   useEffect(() => {
     let ignore = false;
@@ -78,6 +87,24 @@ const Services = () => {
       ignore = true;
     };
   }, [place, radius, attempt]);
+
+  const updateArrows = () => {
+    const el = pillsRef.current;
+    if (!el) return;
+    setArrows({
+      left: el.scrollLeft > 4,
+      right: el.scrollLeft + el.clientWidth < el.scrollWidth - 4,
+    });
+  };
+
+  useEffect(() => {
+    updateArrows();
+    window.addEventListener("resize", updateArrows);
+    return () => window.removeEventListener("resize", updateArrows);
+  }, [data]);
+
+  const scrollPills = (dir) =>
+    pillsRef.current?.scrollBy({ left: dir * 220, behavior: "smooth" });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -203,23 +230,51 @@ const Services = () => {
         </div>
       )}
 
-      <div className="svc-pills" role="tablist" aria-label="Categorías">
-        {categories.map(({ key, label }) => (
+      <div className="svc-pills-wrap">
+        {arrows.left && (
           <button
-            key={key}
             type="button"
-            role="tab"
-            aria-selected={category === key}
-            className={`svc-pill ${category === key ? "is-active" : ""}`}
-            onClick={() => {
-              setCategory(key);
-              setVisible(PAGE_SIZE);
-            }}
+            className="svc-arrow svc-arrow-left"
+            onClick={() => scrollPills(-1)}
+            aria-label="Ver categorías anteriores"
           >
-            {label}
-            {data && <span className="svc-count">{countOf(key)}</span>}
+            <FiChevronLeft aria-hidden="true" />
           </button>
-        ))}
+        )}
+        <div
+          className="svc-pills"
+          ref={pillsRef}
+          onScroll={updateArrows}
+          role="tablist"
+          aria-label="Categorías"
+        >
+          {categories.map(({ key, label }) => (
+            <button
+              key={key}
+              type="button"
+              role="tab"
+              aria-selected={category === key}
+              className={`svc-pill ${category === key ? "is-active" : ""}`}
+              onClick={() => {
+                setCategory(key);
+                setVisible(PAGE_SIZE);
+              }}
+            >
+              {label}
+              {data && <span className="svc-count">{countOf(key)}</span>}
+            </button>
+          ))}
+        </div>
+        {arrows.right && (
+          <button
+            type="button"
+            className="svc-arrow svc-arrow-right"
+            onClick={() => scrollPills(1)}
+            aria-label="Ver más categorías"
+          >
+            <FiChevronRight aria-hidden="true" />
+          </button>
+        )}
       </div>
 
       {loading && !data ? (

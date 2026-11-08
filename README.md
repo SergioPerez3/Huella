@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/banner.png" alt="Huella" width="100%">
+</p>
+
 <h1 align="center">🐾 HUELLA</h1>
 <p align="center"><i>Todo lo que necesita tu mascota, en un solo lugar</i></p>
 
@@ -38,9 +42,13 @@ una interfaz propia y adaptada a móvil, y una página pública de aterrizaje.
 | ----------------------------- | ---------------------------------- | ---------------------------- |
 | ![Inicio](docs/dashboard.png) | ![Calendario](docs/calendario.png) | ![Mascota](docs/mascota.png) |
 
-| Tarjeta de emergencia              | Gastos                     | Móvil                    |
-| ---------------------------------- | -------------------------- | ------------------------ |
-| ![Emergencia](docs/emergencia.png) | ![Gastos](docs/gastos.png) | ![Móvil](docs/movil.png) |
+| Tarjeta de emergencia              | Gastos                     | Servicios cercanos               |
+| ---------------------------------- | -------------------------- | -------------------------------- |
+| ![Emergencia](docs/emergencia.png) | ![Gastos](docs/gastos.png) | ![Servicios](docs/servicios.png) |
+
+<p align="center">
+  <img src="docs/movil.png" alt="Versión móvil" width="200">
+</p>
 
 ## Funcionalidades
 
@@ -51,6 +59,7 @@ una interfaz propia y adaptada a móvil, y una página pública de aterrizaje.
 - **Tareas y calendario**: paseos, alimentación, medicación, peluquería, veterinario y adiestramiento, con repeticiones, vista mensual, semanal y diaria, e iconos y colores por tipo.
 - **Gastos**: por categoría y mascota, con resumen mensual y gráfico de donut.
 - **Documentos**: informes, radiografías y análisis guardados en la nube.
+- **Servicios cercanos**: buscador de veterinarios, peluquerías, residencias, tiendas, cuidadores, paseadores y adiestradores por ciudad o código postal (radio de 10 a 50 km). Muestra la distancia, abre la ruta en Google Maps y permite llamar con un toque. Usa datos abiertos de OpenStreetMap.
 - **Tarjeta de emergencia**: ficha pública por mascota con **QR descargable e imprimible**. El dueño elige qué datos se muestran y quien la encuentre puede llamar con un toque, sin cuenta. El enlace se puede regenerar.
 - **Inicio**: mascotas, próxima cita, tareas de hoy, gastos del mes y próximas tareas.
 - **Configuración**: perfil, avatar (ocho predefinidos o foto propia) y borrado completo de la cuenta.
@@ -59,13 +68,14 @@ una interfaz propia y adaptada a móvil, y una página pública de aterrizaje.
 
 ## Tecnologías
 
-| Parte         | Tecnologías                                                                                                 |
-| ------------- | ----------------------------------------------------------------------------------------------------------- |
-| Front end     | React, Vite, React Router, FullCalendar, Recharts, qrcode.react, react-icons, CSS propio (variables y grid) |
-| Back end      | Node.js, Express, Mongoose, JWT, bcryptjs, helmet, CORS, límites de peticiones, Multer                      |
-| Base de datos | MongoDB Atlas                                                                                               |
-| Archivos      | Cloudinary                                                                                                  |
-| Tests         | Mocha, Chai, Supertest                                                                                      |
+| Parte          | Tecnologías                                                                                                 |
+| -------------- | ----------------------------------------------------------------------------------------------------------- |
+| Front end      | React, Vite, React Router, FullCalendar, Recharts, qrcode.react, react-icons, CSS propio (variables y grid) |
+| Back end       | Node.js, Express, Mongoose, JWT, bcryptjs, helmet, CORS, límites de peticiones, Multer                      |
+| Datos externos | OpenStreetMap: Nominatim (búsqueda de ciudades) y Overpass (lugares)                                        |
+| Base de datos  | MongoDB Atlas                                                                                               |
+| Archivos       | Cloudinary                                                                                                  |
+| Tests          | Mocha, Chai, Supertest                                                                                      |
 
 ## 🌐 Despliegue
 
@@ -129,6 +139,7 @@ La API cuelga de `/api/v1`. Resumen de los recursos principales:
 | Documentos (global)           | `/documents`        | Sí      |
 | Gastos                        | `/expenses`         | Sí      |
 | Resumen de inicio             | `/dashboard`        | Sí      |
+| Servicios cercanos            | `/services`         | Sí      |
 | Tarjeta de emergencia pública | `/emergency/:token` | No      |
 | Comprobación de estado        | `/health`           | No      |
 
@@ -150,13 +161,20 @@ npm test
 - Archivos limitados a 5 MB y verificados por su contenido real, no solo por la extensión.
 - La tarjeta pública solo expone los campos que el dueño activa; su enlace se puede invalidar.
 - Cabeceras de seguridad con `helmet` y límite de peticiones en las rutas sensibles.
+- En Servicios, las coordenadas se redondean (~1 km) y no se guardan en la base de datos. Los datos de terceros se validan antes de mostrarse (por ejemplo, solo enlaces http o https).
 
 ## Próximos pasos
 
-- [ ] Página de servicios cercanos (veterinarios, peluquerías, residencias)
+- [x] API con autenticación, mascotas, salud, tareas, gastos y documentos
+- [x] Tarjeta de emergencia con QR
+- [x] Avatares y configuración de cuenta
+- [x] Diseño responsive para móvil y tablet
+- [x] Landing pública
+- [x] Página de servicios cercanos con datos de OpenStreetMap
 - [ ] Cuenta demo para probar la app sin registrarse
 - [ ] Despliegue (front, API y base de datos)
 - [ ] Modo oscuro
+- [ ] Integración continua con GitHub Actions
 
 ## Autor
 
