@@ -12,6 +12,7 @@ import {
   regenerateEmergency,
 } from "../../services/petService.js";
 import ConfirmDialog from "../ConfirmDialog.jsx";
+import LostPosterCard from "./LostPosterCard.jsx";
 
 const toForm = (e = {}) => ({
   enabled: Boolean(e.enabled),
@@ -296,7 +297,13 @@ const PetEmergency = ({ pet, onChange }) => {
           </div>
         )}
       </div>
-
+      <LostPosterCard
+        pet={pet}
+        active={active}
+        getQr={() =>
+          qrBox.current?.querySelector("canvas")?.toDataURL("image/png")
+        }
+      />
       <ConfirmDialog
         open={confirmOpen}
         busy={busy}

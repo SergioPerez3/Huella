@@ -3349,3 +3349,58 @@ html {
 .svc-arrow-right {
   right: -6px;
 }
+
+/* ===== Poster de mascota perdida ===== */
+.poster-card {
+  grid-column: 1 / -1;
+}
+.poster-card h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.poster-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
+  gap: 24px;
+  align-items: start;
+}
+.poster-preview {
+  position: sticky;
+  top: 16px;
+}
+.poster-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 210 / 297;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+}
+.poster-frame iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 794px;
+  height: 1123px;
+  border: 0;
+  transform-origin: top left;
+  pointer-events: none;
+}
+@media (max-width: 900px) {
+  .poster-layout {
+    grid-template-columns: 1fr;
+  }
+  .poster-preview {
+    position: static;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+}
+
+/* El QR ya no se queda fijo al hacer scroll (evita tapar el cartel) */
+.emergency-grid .qr-panel {
+  position: static;
+}
