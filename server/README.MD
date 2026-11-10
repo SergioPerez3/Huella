@@ -177,6 +177,7 @@ Base: `/api/v1`. Respuestas correctas: `{ "data": ... }`. Errores: `{ "error": {
 |---|---|---|---|
 | POST | `/auth/register` | No | Registrar usuario |
 | POST | `/auth/login` | No | Iniciar sesión |
+| POST | `/auth/demo` | No | Crear una cuenta demo temporal con datos de ejemplo (caduca a las 24 h) |
 | POST | `/auth/logout` | Sí | Cerrar sesión |
 | GET | `/auth/me` | Sí | Usuario actual |
 | PATCH | `/auth/me` | Sí | Editar perfil y avatar predefinido |
@@ -299,5 +300,5 @@ Solo salen los campos que el dueño ha activado. Si la tarjeta está desactivada
 
 ## 🚀 Próximas versiones
 
-- [ ] Cuenta demo con datos de ejemplo
+- [x] Cuenta demo con datos de ejemplo
 - [x] Despliegue

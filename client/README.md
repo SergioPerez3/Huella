@@ -138,7 +138,7 @@ Las rutas privadas usan el *loader* `requiredAuth`, que comprueba la sesión ant
 
 ## 🚀 Próximas versiones
 
-- [ ] Botón "Probar demo"
+- [x] Botón "Probar demo"
 - [ ] Modo oscuro
 - [ ] Estados vacíos con ilustración
 - [x] Despliegue

@@ -60,6 +60,7 @@ una interfaz propia y adaptada a móvil, y una página pública de aterrizaje.
 - **Servicios cercanos**: buscador de veterinarios, peluquerías, residencias, tiendas, cuidadores, paseadores y adiestradores por ciudad o código postal (radio de 10 a 50 km). Muestra la distancia, abre la ruta en Google Maps y permite llamar con un toque. Usa datos abiertos de OpenStreetMap.
 - **Tarjeta de emergencia**: ficha pública por mascota con **QR descargable e imprimible**. El dueño elige qué datos se muestran y quien la encuentre puede llamar con un toque, sin cuenta. El enlace se puede regenerar.
 - **Cartel de «Se busca»**: genera un cartel A4 con la foto y los datos de tu mascota (lugar, señas, recompensa, teléfono y QR), con vista previa en vivo, listo para imprimir o guardar en PDF.
+- **Cuenta demo**: el botón «Probar demo» crea al instante una cuenta temporal con mascotas, tareas, gastos y salud de ejemplo, sin registrarse. Cada visitante tiene la suya y se borra a las 24 horas.
 - **Inicio**: mascotas, próxima cita, tareas de hoy, gastos del mes y próximas tareas.
 - **Configuración**: perfil, avatar (ocho predefinidos o foto propia) y borrado completo de la cuenta.
 - **Landing pública** con redirección automática al Inicio si ya tienes sesión.
@@ -173,7 +174,7 @@ npm test
 - [x] Landing pública
 - [x] Página de servicios cercanos con datos de OpenStreetMap
 - [x] Cartel de «Se busca» imprimible
-- [ ] Cuenta demo para probar la app sin registrarse
+- [x] Cuenta demo para probar la app sin registrarse
 - [x] Despliegue (Vercel, Render y MongoDB Atlas)
 - [ ] Modo oscuro
 - [ ] Integración continua con GitHub Actions
