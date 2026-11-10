@@ -1,14 +1,12 @@
 # 🐾 HUELLA API
 
-<!-- DESPLIEGUE (mañana): descomenta y pon tu URL
 <p align="center">
-  <a href="https://TU-URL.vercel.app">
-    <img src="https://img.shields.io/badge/🐾_Demo_en_vivo-TU--URL.vercel.app-f2994a?style=for-the-badge" alt="Demo en vivo" />
+  <a href="https://huella-alpha.vercel.app">
+    <img src="https://img.shields.io/badge/🐾_Demo_en_vivo-huella--alpha.vercel.app-f2994a?style=for-the-badge" alt="Demo en vivo" />
   </a>
 </p>
 
 > ⏳ La API está en el plan gratuito de Render: si lleva un rato sin visitas, la primera carga puede tardar 30-50 segundos.
--->
 
 API REST del proyecto **HUELLA**, una aplicación para gestionar mascotas. Los usuarios se registran, crean la ficha de sus mascotas, anotan su salud, peso, tareas, gastos y documentos, y generan una tarjeta pública de emergencia con QR.
 
@@ -302,4 +300,4 @@ Solo salen los campos que el dueño ha activado. Si la tarjeta está desactivada
 ## 🚀 Próximas versiones
 
 - [ ] Cuenta demo con datos de ejemplo
-- [ ] Despliegue
+- [x] Despliegue

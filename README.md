@@ -5,15 +5,13 @@
 <h1 align="center">🐾 HUELLA</h1>
 <p align="center"><i>Todo lo que necesita tu mascota, en un solo lugar</i></p>
 
-<!-- DESPLIEGUE (mañana): descomenta y pon tu URL
 <p align="center">
-  <a href="https://TU-URL.vercel.app">
-    <img src="https://img.shields.io/badge/🐾_Demo_en_vivo-TU--URL.vercel.app-f2994a?style=for-the-badge" alt="Demo en vivo" />
+  <a href="https://huella-alpha.vercel.app">
+    <img src="https://img.shields.io/badge/🐾_Demo_en_vivo-huella--alpha.vercel.app-f2994a?style=for-the-badge" alt="Demo en vivo" />
   </a>
 </p>
 
 > ⏳ La API está en el plan gratuito de Render: si lleva un rato sin visitas, la primera carga puede tardar 30-50 segundos.
--->
 
 <p align="center">
   <img src="https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black" alt="React">
@@ -61,6 +59,7 @@ una interfaz propia y adaptada a móvil, y una página pública de aterrizaje.
 - **Documentos**: informes, radiografías y análisis guardados en la nube.
 - **Servicios cercanos**: buscador de veterinarios, peluquerías, residencias, tiendas, cuidadores, paseadores y adiestradores por ciudad o código postal (radio de 10 a 50 km). Muestra la distancia, abre la ruta en Google Maps y permite llamar con un toque. Usa datos abiertos de OpenStreetMap.
 - **Tarjeta de emergencia**: ficha pública por mascota con **QR descargable e imprimible**. El dueño elige qué datos se muestran y quien la encuentre puede llamar con un toque, sin cuenta. El enlace se puede regenerar.
+- **Cartel de «Se busca»**: genera un cartel A4 con la foto y los datos de tu mascota (lugar, señas, recompensa, teléfono y QR), con vista previa en vivo, listo para imprimir o guardar en PDF.
 - **Inicio**: mascotas, próxima cita, tareas de hoy, gastos del mes y próximas tareas.
 - **Configuración**: perfil, avatar (ocho predefinidos o foto propia) y borrado completo de la cuenta.
 - **Landing pública** con redirección automática al Inicio si ya tienes sesión.
@@ -81,10 +80,12 @@ una interfaz propia y adaptada a móvil, y una página pública de aterrizaje.
 
 | Parte                    | Plataforma    |
 | ------------------------ | ------------- |
-| Front end (React + Vite) | _pendiente_   |
-| API (Node + Express)     | _pendiente_   |
+| Front end (React + Vite) | [Vercel](https://huella-alpha.vercel.app) |
+| API (Node + Express)     | Render (plan gratuito) |
 | Base de datos            | MongoDB Atlas |
 | Archivos                 | Cloudinary    |
+
+> ⏳ La API usa el plan gratuito de Render: tras un rato sin visitas, la primera carga puede tardar 30-50 segundos.
 
 ## Estructura
 
@@ -171,8 +172,9 @@ npm test
 - [x] Diseño responsive para móvil y tablet
 - [x] Landing pública
 - [x] Página de servicios cercanos con datos de OpenStreetMap
+- [x] Cartel de «Se busca» imprimible
 - [ ] Cuenta demo para probar la app sin registrarse
-- [ ] Despliegue (front, API y base de datos)
+- [x] Despliegue (Vercel, Render y MongoDB Atlas)
 - [ ] Modo oscuro
 - [ ] Integración continua con GitHub Actions
 

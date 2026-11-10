@@ -1,14 +1,12 @@
 # 🐾 HUELLA Front end
 
-<!-- DESPLIEGUE (mañana): descomenta y pon tu URL
 <p align="center">
-  <a href="https://TU-URL.vercel.app">
-    <img src="https://img.shields.io/badge/🐾_Demo_en_vivo-TU--URL.vercel.app-f2994a?style=for-the-badge" alt="Demo en vivo" />
+  <a href="https://huella-alpha.vercel.app">
+    <img src="https://img.shields.io/badge/🐾_Demo_en_vivo-huella--alpha.vercel.app-f2994a?style=for-the-badge" alt="Demo en vivo" />
   </a>
 </p>
 
 > ⏳ La API está en el plan gratuito de Render: si lleva un rato sin visitas, la primera carga puede tardar 30-50 segundos.
--->
 
 Interfaz de **HUELLA**, una aplicación para gestionar mascotas. Hecha con **React** y **Vite**, consume la API de [`../server`](../server/README.md): ficha de mascotas, salud, calendario de tareas, gastos y tarjeta de emergencia con QR.
 
@@ -118,7 +116,7 @@ Las rutas privadas usan el *loader* `requiredAuth`, que comprueba la sesión ant
 - **Tareas** con repeticiones, completar, saltar y filtros.
 - **Salud y Gastos globales** con filtro por mascota.
 - **Servicios cercanos**: banner con buscador de ciudad o código postal (Madrid por defecto), radio de 10, 30 o 50 km, botón «Usar mi ubicación», filtros por categoría con contadores y flechas para desplazarlos en pantallas pequeñas, tarjetas con ilustración propia, distancia, ruta en Google Maps y llamada. Con indicador de carga y aviso de error con botón de reintento.
-- **Tarjeta de emergencia**: formulario, QR en vivo, descarga, etiqueta imprimible y página pública pensada para móvil.
+- **Tarjeta de emergencia**: formulario, QR en vivo, descarga, etiqueta imprimible y página pública pensada para móvil, y **cartel de «Se busca»** con vista previa en vivo para imprimir o guardar en PDF.
 - **Configuración**: nombre, avatar (ocho predefinidos o foto propia) y borrado de cuenta con confirmación.
 
 ## ⚙️ Cómo funciona
@@ -143,4 +141,4 @@ Las rutas privadas usan el *loader* `requiredAuth`, que comprueba la sesión ant
 - [ ] Botón "Probar demo"
 - [ ] Modo oscuro
 - [ ] Estados vacíos con ilustración
-- [ ] Despliegue
+- [x] Despliegue
