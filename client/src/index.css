@@ -3404,3 +3404,16 @@ html {
 .emergency-grid .qr-panel {
   position: static;
 }
+
+
+/* ===== Boton "Probar demo" ===== */
+.btn-demo {
+  background: #f2994a;
+  color: #3b2200;
+}
+.btn-demo:hover {
+  background: #e58a38;
+}
+.btn-demo:disabled {
+  opacity: 0.7;
+}

@@ -13,6 +13,8 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true, select: false },
     timezone: { type: String, default: "Europe/Madrid" },
     avatar: { preset: String, url: String, publicId: String },
+    isDemo: { type: Boolean, default: false },
+    demoExpiresAt: Date,
   },
   { timestamps: true },
 );

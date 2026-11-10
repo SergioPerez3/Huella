@@ -5,6 +5,7 @@ import pick from "../utils/pick.js";
 import { deleteAccountData } from "../services/accountService.js";
 import { uploadBuffer, deleteFile } from "../services/uploadService.js";
 import { AVATAR_PRESETS } from "../utils/avatarPresets.js";
+import { createDemoAccount } from "../services/demoService.js";
 
 const isProd = process.env.NODE_ENV === "production";
 const cookieOptions = {
@@ -22,6 +23,7 @@ const publicUser = (u) => ({
   email: u.email,
   timezone: u.timezone,
   avatar: { preset: u.avatar?.preset || null, url: u.avatar?.url || null },
+  isDemo: Boolean(u.isDemo),
 });
 
 export const register = async (req, res, next) => {
@@ -69,6 +71,19 @@ export const login = async (req, res, next) => {
     }
     res.cookie("token", signToken(user._id), cookieOptions);
     res.status(200).json({ data: publicUser(user) });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const demoLogin = async (req, res, next) => {
+  try {
+    const user = await createDemoAccount();
+    res.cookie("token", signToken(user._id), {
+      ...cookieOptions,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+    res.status(201).json({ data: publicUser(user) });
   } catch (error) {
     next(error);
   }

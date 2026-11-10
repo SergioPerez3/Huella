@@ -3,6 +3,7 @@ import {
   getMe,
   loginUser,
   registerUser,
+  startDemo,
   logoutUser,
   updateMe,
   deleteMe,
@@ -30,6 +31,11 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (data) => {
     const res = await registerUser(data);
+    setUser(res.data);
+  };
+
+  const demo = async () => {
+    const res = await startDemo();
     setUser(res.data);
   };
 
@@ -63,6 +69,7 @@ export const AuthProvider = ({ children }) => {
         loading,
         login,
         register,
+        demo,
         logout,
         updateProfile,
         removeAccount,

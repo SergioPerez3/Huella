@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth.js";
 import PasswordInput from '../components/PasswordInput.jsx';
+import DemoButton from "../components/DemoButton.jsx";
 
 const Login = () => {
   const { login } = useAuth();
@@ -52,6 +53,7 @@ const Login = () => {
           {submitting ? "Entering..." : "Login"}
         </button>
       </form>
+      <DemoButton className="btn btn-demo" />
       <p>
         ¿No tienes cuenta? <Link to="/register">Regístrate</Link>
       </p>

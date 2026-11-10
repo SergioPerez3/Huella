@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import DemoButton from "../components/DemoButton.jsx";
 import { FaPaw } from "react-icons/fa";
 import {
   FiHeart,
@@ -96,6 +97,7 @@ const Landing = () => (
             <Link to="/register" className="btn btn-primary btn-lg">
               Crear cuenta gratis <FiArrowRight aria-hidden="true" />
             </Link>
+            <DemoButton className="btn btn-demo btn-lg" />
             <Link to="/login" className="btn btn-ghost btn-lg">
               Ya tengo cuenta
             </Link>
